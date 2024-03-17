@@ -8,7 +8,3 @@ variable "aws_subnet" {
     type = list(string)
 }
 
-variable "image" {
-    description = "Docker image to run in the ECS cluster"
-    type = string
-}
