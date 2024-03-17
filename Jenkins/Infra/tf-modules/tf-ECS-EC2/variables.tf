@@ -14,5 +14,4 @@ variable "aws_subnet" {
 variable "image" {
     description = "Docker image to run in the ECS cluster"
     type = string
-    default     = "nginx:latest"
 }

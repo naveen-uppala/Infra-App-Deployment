@@ -1,7 +1,3 @@
-variable "region" {
-  description = "The AWS region"
-  default     = "us-east-2"
-}
 
 variable "cluster_name" {
   description = "The name of the EKS cluster"
@@ -11,7 +7,6 @@ variable "cluster_name" {
 variable "subnet_ids" {
   description = "List of subnet IDs for the EKS cluster"
   type        = list(string)
-  default     = []
 }
 
 variable "node_instance_type" {
