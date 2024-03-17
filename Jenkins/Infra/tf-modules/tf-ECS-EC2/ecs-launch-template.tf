@@ -10,7 +10,11 @@ resource "aws_launch_template" "ecs_ec2" {
   instance_type          = "t3.medium"
   vpc_security_group_ids = [aws_security_group.ecs_node_sg.id]
 
-  iam_instance_profile { arn = aws_iam_instance_profile.ecs_node.arn }
+  iam_instance_profile {
+
+     name = var.ecs_node_profile_name
+     
+      }
   monitoring { enabled = true }
 
   user_data = base64encode(<<-EOF

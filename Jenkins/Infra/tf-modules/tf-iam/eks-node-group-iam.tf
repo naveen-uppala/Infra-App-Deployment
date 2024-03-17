@@ -16,3 +16,7 @@ resource "aws_iam_role" "node_group_role" {
   "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy", 
   "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]
 }
+
+output "node_group_role_arn" {
+  value = aws_iam_role.node_group_role.arn
+}

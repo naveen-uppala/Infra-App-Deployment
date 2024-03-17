@@ -33,3 +33,11 @@ variable "ami_id" {
   description = "The ami_id for the launc h template"
   default     = "ami-0e0bf53f6def86294"
 }
+
+variable "cluster_role_arn" {
+  type = string
+}
+
+variable "node_group_role_arn" {
+  type = string
+}

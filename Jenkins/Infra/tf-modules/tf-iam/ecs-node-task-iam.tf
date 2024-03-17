@@ -47,3 +47,7 @@ resource "aws_iam_role" "ecs_task_exec_role" {
   assume_role_policy = data.aws_iam_policy_document.ecs_task_policy_doc.json
   managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
+
+output "ecs_node_profile_name" {
+  value = aws_iam_instance_profile.ecs_node.name
+}

@@ -1,6 +1,6 @@
 resource "aws_eks_cluster" "example" {
   name     = var.cluster_name
-  role_arn = aws_iam_role.example.arn
+  role_arn = var.cluster_role_arn
 
   vpc_config {
     subnet_ids = var.subnet_ids

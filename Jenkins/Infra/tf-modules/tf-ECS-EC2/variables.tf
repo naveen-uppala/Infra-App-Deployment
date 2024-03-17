@@ -8,3 +8,7 @@ variable "aws_subnet" {
     type = list(string)
 }
 
+variable "ecs_node_profile_name" {
+    description = "ecs node profile role arn"
+    type = string
+}

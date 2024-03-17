@@ -19,3 +19,7 @@ resource "aws_iam_role" "example" {
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
   managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"]
 }
+
+output "eks_cluster_arn" {
+  value = aws_iam_role.example.arn
+}
