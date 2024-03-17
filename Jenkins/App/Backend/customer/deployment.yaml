@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deployment
+  labels:
+    app: packersmovers
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  revisionHistoryLimit: 4
+  replicas: 2
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      app: packersmovers
+  template:
+    metadata:
+      labels:
+        app: packersmovers
+    spec:
+      containers:
+      - name: customer
+        image: 637423236688.dkr.ecr.us-east-2.amazonaws.com/customer-be:default_tags
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
