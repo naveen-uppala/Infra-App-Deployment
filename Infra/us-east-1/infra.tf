@@ -1,6 +1,16 @@
 provider "aws" {
   region = "ap-south-2"
 }
+
+terraform {
+    backend "s3" {
+        bucket = "tcn-terraform-s3-bucket"
+        key    = "tcn/terraform/remote/s3/terraform.tfstate"
+        region     = "ap-south-2"
+        dynamodb_table = "dynamodb-state-locking"
+    }
+}
+
 module "iam_policies_roles" {
   source = "../tf-modules/tf-iam"
 }
