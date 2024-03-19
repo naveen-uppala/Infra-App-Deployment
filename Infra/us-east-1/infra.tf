@@ -11,9 +11,9 @@ terraform {
     }
 }
 
-# module "iam_policies_roles" {
-#   source = "../tf-modules/tf-iam"
-# }
+ module "iam_policies_roles" {
+   source = "../tf-modules/tf-iam"
+ }
 
 
 # module "ecs_cluster" {
