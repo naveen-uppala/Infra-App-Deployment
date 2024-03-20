@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-deployment
+  name: customer
   labels:
     app: packersmovers
 spec:
@@ -12,7 +12,6 @@ spec:
       maxUnavailable: 1
   revisionHistoryLimit: 4
   replicas: 2
-  minReadySeconds: 10
   selector:
     matchLabels:
       app: packersmovers
@@ -23,7 +22,7 @@ spec:
     spec:
       containers:
       - name: customer
-        image: 637423236688.dkr.ecr.us-east-2.amazonaws.com/customer-be:default_tags
+        image: 851725321621.dkr.ecr.ap-south-1.amazonaws.com/customer:default_tag
         imagePullPolicy: Always
         ports:
         - containerPort: 8081
