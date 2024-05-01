@@ -4,6 +4,12 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-deployment
 spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  revisionHistoryLimit: 4  
   replicas: 3
   selector:
     matchLabels:
@@ -17,4 +23,4 @@ spec:
       - name: {{ .Chart.Name }}-container
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag  }}"
         ports:
-        - containerPort: 80
+        - containerPort: 8080
