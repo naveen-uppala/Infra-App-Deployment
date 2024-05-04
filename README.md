@@ -27,7 +27,7 @@ helm template demohelm
 helm lint demohelm
 ```
 ```
-helm install k8stohelm demohelm
+helm install <release_name> <chart_name> [flags]
 ```
 ```
 helm rollback release_name revsion_number chart_name
