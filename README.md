@@ -34,15 +34,18 @@ helm list [flags]
 ```
 helm uninstall <release_name>
 ```
+###### Install a Helm chart onto Kubernetes.
 ```
 helm install <release_name> <chart_name> [flags]
 ```
+###### Rollback to a previous version of a release
 ```
 helm rollback release_name revsion_number chart_name
 ```
 ```
 helm upgrade <release_name> <chart_name> [flags]
 ```
+###### Upgrade a Helm release to a new version or configuration
 ```
 helm upgrade release_name --install chart_name --set image.tag=tag_name
 ```
