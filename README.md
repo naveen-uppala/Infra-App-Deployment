@@ -27,10 +27,16 @@ helm template demohelm
 helm lint demohelm
 ```
 ```
+helm list [flags]
+```
+```
 helm install <release_name> <chart_name> [flags]
 ```
 ```
 helm rollback release_name revsion_number chart_name
+```
+```
+helm upgrade <release_name> <chart_name> [flags]
 ```
 ```
 helm upgrade release_name --install chart_name --set image.tag=tag_name
