@@ -26,6 +26,7 @@ helm template helmchartname
 ```
 helm lint <chart_directory>
 ```
+###### List releases
 ```
 helm list [flags]
 ```
