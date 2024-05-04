@@ -30,6 +30,9 @@ helm lint <chart_directory>
 helm list [flags]
 ```
 ```
+helm uninstall <release_name>
+```
+```
 helm install <release_name> <chart_name> [flags]
 ```
 ```
