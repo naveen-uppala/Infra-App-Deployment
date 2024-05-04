@@ -44,7 +44,7 @@ helm upgrade <release_name> <chart_name> [flags]
 ```
 helm upgrade release_name --install chart_name --set image.tag=tag_name
 ```
-###### Show information about a chart.
+ ###### Show information about a chart.
 ```
 helm show chart <chart_name>
 helm show values <chart_name>
