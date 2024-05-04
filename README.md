@@ -42,10 +42,11 @@ helm install <release_name> <chart_name> [flags]
 ```
 helm rollback release_name revsion_number chart_name
 ```
+###### Upgrade a Helm release to a new version or configuration
 ```
 helm upgrade <release_name> <chart_name> [flags]
 ```
-###### Upgrade a Helm release to a new version or configuration
+##### upgrade or install a Helm release with a specified chart and set a specific image tag
 ```
 helm upgrade release_name --install chart_name --set image.tag=tag_name
 ```
