@@ -21,10 +21,10 @@ or
 use ls 
 ```
 ```
-helm template demohelm 
+helm template helmchartname
 ```
 ```
-helm lint demohelm
+helm lint <chart_directory>
 ```
 ```
 helm list [flags]
