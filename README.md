@@ -35,3 +35,7 @@ helm rollback release_name revsion_number chart_name
 ```
 helm upgrade release_name --install chart_name --set image.tag=tag_name
 ```
+
+```
+helm upgrade release_name --install chart_name --set image.tag=tag_name --revision=revision_number
+```
