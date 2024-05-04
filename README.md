@@ -30,6 +30,7 @@ helm lint <chart_directory>
 ```
 helm list [flags]
 ```
+###### Uninstall a Helm release from Kubernetes.
 ```
 helm uninstall <release_name>
 ```
