@@ -23,7 +23,7 @@ service:
 ingress:
   enabled: true
   className: ""
-  annotations: {}
+  annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/subnets: subnet-047ab63f535b63b5d, subnet-04c96de2d8aecfd0e, subnet-0a0facefb09715674  
     alb.ingress.kubernetes.io/target-type: ip
