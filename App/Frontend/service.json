@@ -1,0 +1,13 @@
+{
+    "cluster": "batch18-ecs-cluster",
+    "serviceName": "frontend",
+    "taskDefinition": "your-task-definition",
+    "desiredCount": 2,
+    "launchType": "EC2",
+    "networkConfiguration": {
+        "awsvpcConfiguration": {
+            "subnets": ["subnet-12345678"],
+            "securityGroups": ["sg-87654321"]
+        }
+    }
+}
