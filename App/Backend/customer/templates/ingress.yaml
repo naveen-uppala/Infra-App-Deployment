@@ -1,29 +1,29 @@
-# Annotations Reference:  https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/ingress/annotation/
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ingress-packersmovers-service
-  labels:
-    app: packersmovers
-  annotations:
-    # Ingress Core Settings
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: subnet-061b0dd145e444875, subnet-0c821a62cb75f25be, subnet-03113ab7dc2eae892  
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:637423236688:certificate/34cf587c-b3ff-49cb-9cbe-4907105c6fd5
+# # Annotations Reference:  https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/ingress/annotation/
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: ingress-packersmovers-service
+#   labels:
+#     app: packersmovers
+#   annotations:
+#     # Ingress Core Settings
+#     alb.ingress.kubernetes.io/scheme: internet-facing
+#     alb.ingress.kubernetes.io/subnets: subnet-061b0dd145e444875, subnet-0c821a62cb75f25be, subnet-03113ab7dc2eae892  
+#     alb.ingress.kubernetes.io/target-type: ip
+#     alb.ingress.kubernetes.io/healthcheck-path: /health
+#     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+#     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:637423236688:certificate/34cf587c-b3ff-49cb-9cbe-4907105c6fd5
 
     
-spec:
-  ingressClassName: alb
-  rules:
-  - http:
-      paths:
-      - backend:
-          service:
-            name: {{ .Chart.Name }}
-            port:
-              number: 8081
-        path: /{{ .Chart.Name }}*
-        pathType: ImplementationSpecific
+# spec:
+#   ingressClassName: alb
+#   rules:
+#   - http:
+#       paths:
+#       - backend:
+#           service:
+#             name: {{ .Chart.Name }}
+#             port:
+#               number: 8080
+#         path: /{{ .Chart.Name }}*
+#         pathType: ImplementationSpecific
