@@ -1,7 +1,4 @@
 {
-  "cluster": "my-ecs-cluster",
-  "serviceName": "my-service",
-  "taskDefinition": "my-task-definition",
   "desiredCount": 2,
   "launchType": "EC2",
   "networkConfiguration": {
