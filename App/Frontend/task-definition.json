@@ -4,7 +4,7 @@
   "containerDefinitions": [
     {
       "name": "frontend",
-      "image": "image-placeholder",
+      "image": "imagename",
       "memory": 1024,
       "cpu": 512,
       "portMappings": [
