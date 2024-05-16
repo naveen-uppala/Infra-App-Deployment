@@ -11,7 +11,7 @@
       "securityGroups": [
         "sg-0d15720aa3f886dc6" 
       ],
-      "assignPublicIp": "ENABLED"
+      "assignPublicIp": "DISABLED"
     }
   },
   "loadBalancers": [
