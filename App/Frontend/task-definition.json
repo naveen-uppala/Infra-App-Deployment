@@ -1,0 +1,26 @@
+{
+  "family": "frontend-task",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "name": "frontend",
+      "image": "${IMAGE_NAME}",
+      "memory": 1024,
+      "cpu": 512,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "ecs-my-task",
+          "awslogs-region": "your-aws-region",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
