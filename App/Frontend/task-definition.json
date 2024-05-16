@@ -4,7 +4,7 @@
   "containerDefinitions": [
     {
       "name": "frontend",
-      "image": ${REPOSITORY_URI},
+      "image": "${REPOSITORY_URI}",
       "memory": 1024,
       "cpu": 512,
       "portMappings": [
