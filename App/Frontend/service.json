@@ -19,7 +19,7 @@
   },
   "loadBalancers": [
     {
-      "targetGroupArn": "arn:aws:elasticloadbalancing:region:123456789012:targetgroup/my-target-group/abcdef1234567890",
+      "targetGroupArn": "target-group-arn-placeholder",
       "containerName": "my-container",
       "containerPort": 80
     }
