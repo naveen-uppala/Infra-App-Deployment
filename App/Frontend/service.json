@@ -1,13 +1,27 @@
 {
-    "cluster": "batch18-ecs-cluster",
-    "serviceName": "frontend",
-    "taskDefinition": "your-task-definition",
-    "desiredCount": 2,
-    "launchType": "EC2",
-    "networkConfiguration": {
-        "awsvpcConfiguration": {
-            "subnets": ["subnet-12345678"],
-            "securityGroups": ["sg-87654321"]
-        }
+  "cluster": "my-ecs-cluster",
+  "serviceName": "my-service",
+  "taskDefinition": "my-task-definition",
+  "desiredCount": 2,
+  "launchType": "EC2",
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "subnets": [
+        "subnet-047ab63f535b63b5d",
+        "subnet-04c96de2d8aecfd0e",
+        "subnet-0a0facefb09715674"  
+      ],
+      "securityGroups": [
+        "sg-0d15720aa3f886dc6" 
+      ],
+      "assignPublicIp": "DISABLED"
     }
+  },
+  "loadBalancers": [
+    {
+      "targetGroupArn": "arn:aws:elasticloadbalancing:region:123456789012:targetgroup/my-target-group/abcdef1234567890",
+      "containerName": "my-container",
+      "containerPort": 80
+    }
+  ]
 }
