@@ -17,6 +17,7 @@
   "loadBalancers": [
     {
       "targetGroupArn": "target-group-arn",
+      "containerName": "container-name",
       "containerPort": 80
     }
   ]
