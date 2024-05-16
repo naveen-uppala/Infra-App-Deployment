@@ -17,7 +17,7 @@
         "logDriver": "awslogs",
         "options": {
           "awslogs-group": "ecs-my-task",
-          "awslogs-region": "your-aws-region",
+          "awslogs-region": "us-east-2",
           "awslogs-stream-prefix": "ecs"
         }
       }
