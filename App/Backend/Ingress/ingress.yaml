@@ -22,8 +22,17 @@ spec:
       paths:
       - backend:
           service:
-            name: {{ .Chart.Name }}-service
+            name: customer-service
             port:
               number: 8080
-        path: /{{ .Chart.Name }}*
+        path: /customer*
         pathType: ImplementationSpecific
+        
+      - backend:
+          service:
+            name: driver-service
+            port:
+              number: 8080
+        path: /driver*
+        pathType: ImplementationSpecific        
+        
