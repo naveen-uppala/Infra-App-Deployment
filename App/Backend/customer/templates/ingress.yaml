@@ -22,7 +22,7 @@ spec:
       paths:
       - backend:
           service:
-            name: {{ .Chart.Name }}
+            name: {{ .Chart.Name }}-service
             port:
               number: 8080
         path: /{{ .Chart.Name }}*
