@@ -12,26 +12,6 @@ image:
   tag: ""
 
 
-ingress:
-  enabled: true
-  className: ""
-  annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: subnet-047ab63f535b63b5d, subnet-04c96de2d8aecfd0e, subnet-0a0facefb09715674  
-    alb.ingress.kubernetes.io/target-type: ip
-    # alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-    # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:637423236688:certificate/34cf587c-b3ff-49cb-9cbe-4907105c6fd5
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
 
 serviceAccount:
   # Specifies whether a service account should be created
