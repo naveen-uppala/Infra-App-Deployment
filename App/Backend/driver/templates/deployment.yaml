@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-deployment
+  name: {{ .Chart.Name }}-deployment
 spec:
   strategy:
     type: RollingUpdate
@@ -10,7 +10,7 @@ spec:
       maxSurge: 1
       maxUnavailable: 1
   revisionHistoryLimit: 4  
-  replicas: 3
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
@@ -22,5 +22,17 @@ spec:
       containers:
       - name: {{ .Chart.Name }}-container
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag  }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-        - containerPort: 8080
+        - containerPort: {{ .Values.image.containerPort }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+  selector:
+    app: {{ .Chart.Name }}
