@@ -1,6 +1,7 @@
 {
   "desiredCount": 2,
   "launchType": "FARGATE",
+  "serviceName": "<+service.name>",
   "networkConfiguration": {
     "awsvpcConfiguration": {
       "subnets": [
