@@ -1,24 +1,24 @@
 {
   "desiredCount": 2,
-  "launchType": "EC2",
+  "launchType": "FARGATE",
   "networkConfiguration": {
     "awsvpcConfiguration": {
       "subnets": [
-        "subnet-047ab63f535b63b5d",
-        "subnet-04c96de2d8aecfd0e",
-        "subnet-0a0facefb09715674"  
+        "subnet-0a2aebbdf06fc888b",
+        "subnet-0073844bcbf183fd0",
+        "subnet-0aa476740e263c06b"  
       ],
       "securityGroups": [
-        "sg-0d15720aa3f886dc6" 
+        "sg-0ce6d0f5bd402dab9" 
       ],
       "assignPublicIp": "DISABLED"
     }
   },
   "loadBalancers": [
     {
-      "targetGroupArn": "target-group-arn",
-      "containerName": "container-name",
-      "containerPort": 80
+      "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-2:381492302819:targetgroup/customer-tg/242f40e50c6b4257",
+      "containerName": "customer",
+      "containerPort": 8080
     }
   ]
 }
