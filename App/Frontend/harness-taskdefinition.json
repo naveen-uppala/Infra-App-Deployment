@@ -2,16 +2,16 @@
   "family": "hpm-<+serviceVariables.containername>td",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
+  "memory": "<+serviceVariables.memory>",
+  "cpu": "<+serviceVariables.cpu>",
   "containerDefinitions": [
     {
       "name": "<+serviceVariables.containername>",
       "image": "<+artifact.image>",
-      "memory": "<+serviceVariables.memory>",
-      "cpu": "<+serviceVariables.cpu>",
       "portMappings": [
         {
           "containerPort": "<+serviceVariables.containerport>",
-          "protocol": "tcp"
+          "containerName": "<+serviceVariables.containername>"
         }
       ]
     }
