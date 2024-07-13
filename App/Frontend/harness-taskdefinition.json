@@ -3,13 +3,13 @@
   "networkMode": "awsvpc",
   "containerDefinitions": [
     {
-      "name": "container-name",
-      "image": "image-name",
+      "name": "customer",
+      "image": "<+imagename.tag>",
       "memory": 1024,
       "cpu": 512,
       "portMappings": [
         {
-          "containerPort": 80,
+          "containerPort": 8080,
           "protocol": "tcp"
         }
       ]
