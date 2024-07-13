@@ -1,5 +1,7 @@
 {
-  "family": "hpm-<+serviceVariables.containername>td",
+  "family": "hpm-<+serviceVariables.containername>-td",
+  "taskRoleArn": "<+serviceVariables.taskRoleArn>",
+  "executionRoleArn": "<+serviceVariables.executionRoleArn>",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
   "memory": "<+serviceVariables.memory>",
