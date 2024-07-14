@@ -16,8 +16,8 @@
           "logDriver": "awslogs",
           "options": {
               "awslogs-create-group": "true",
-              "awslogs-group": "/ecs/<+serviceVariables.containername",
-              "awslogs-region": "<+serviceVariables.region",
+              "awslogs-group": "/ecs/<+serviceVariables.containername>",
+              "awslogs-region": "<+serviceVariables.region>",
               "awslogs-stream-prefix": "<+serviceVariables.containername>"
           }
       },      
