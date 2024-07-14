@@ -2,14 +2,14 @@
   "desiredCount": 2,
   "launchType": "FARGATE",
   "serviceName": "<+service.name>",
-    "deploymentConfiguration": {
-    "maximumPercent": 200,
-    "minimumHealthyPercent": 100,
-    "deploymentCircuitBreaker": {
-      "enable": true,
-      "rollback": true
-    }
+  "deploymentConfiguration": {
+  "maximumPercent": 200,
+  "minimumHealthyPercent": 100,
+  "deploymentCircuitBreaker": {
+    "enable": true,
+    "rollback": true
   }
+},
   "networkConfiguration": {
     "awsvpcConfiguration": {
       "subnets": [
