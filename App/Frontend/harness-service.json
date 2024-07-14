@@ -1,7 +1,7 @@
 {
   "desiredCount": 2,
   "launchType": "FARGATE",
-  "serviceName": "<+service.name>",
+  "serviceName": "<+serviceVariables.containername>",
   "deploymentConfiguration": {
   "maximumPercent": 200,
   "minimumHealthyPercent": 100,
