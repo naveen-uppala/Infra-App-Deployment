@@ -10,11 +10,17 @@
       "name": "<+serviceVariables.containername>",
       "image": "<+artifact.image>",
       "portMappings": [
-        {
-          "containerPort": "<+serviceVariables.containerport>",
-          "containerName": "<+serviceVariables.containername>"
-        }
-      ]
+        {"containerPort": "<+serviceVariables.containerport>"}
+      ],
+      "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+              "awslogs-create-group": "true",
+              "awslogs-group": "/ecs/<+serviceVariables.containername",
+              "awslogs-region": "<+serviceVariables.region",
+              "awslogs-stream-prefix": "<+serviceVariables.containername>"
+          }
+      },      
     }
   ]
 }
