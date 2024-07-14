@@ -2,6 +2,14 @@
   "desiredCount": 2,
   "launchType": "FARGATE",
   "serviceName": "<+service.name>",
+    "deploymentConfiguration": {
+    "maximumPercent": 200,
+    "minimumHealthyPercent": 50,
+    "deploymentCircuitBreaker": {
+      "enable": true,
+      "rollback": true
+    }
+  }
   "networkConfiguration": {
     "awsvpcConfiguration": {
       "subnets": [
@@ -12,7 +20,7 @@
       "securityGroups": [
         "sg-0ce6d0f5bd402dab9" 
       ],
-      "assignPublicIp": "DISABLED"
+      "assignPublicIp": "ENABLED"
     }
   },
   "loadBalancers": [
