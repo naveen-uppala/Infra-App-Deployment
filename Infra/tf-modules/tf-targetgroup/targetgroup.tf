@@ -1,3 +1,7 @@
+provider "aws" {
+   region = "<+serviceVariables.region>"
+}
+
 resource "aws_lb_target_group" "ecs-alb-target-group" {
   name        = "<+serviceVariables.target_group_name>"
   port        = "<+serviceVariables.containerport>"
