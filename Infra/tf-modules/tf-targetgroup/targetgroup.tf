@@ -3,8 +3,8 @@ provider "aws" {
 }
 
 resource "aws_lb_target_group" "ecs-alb-target-group" {
-  name        = var.targetgroup_name
-  port        = var.container_port
+  name        = <value>
+  port        = <value>
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = "<+serviceVariables.VpcId"
