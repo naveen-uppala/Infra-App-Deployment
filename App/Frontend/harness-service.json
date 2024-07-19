@@ -25,7 +25,7 @@
   },
   "loadBalancers": [
     {
-      "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-2:381492302819:targetgroup/customer-tg/242f40e50c6b4257",
+      "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-2:381492302819:targetgroup/frontend-tg/*",
       "containerName": "customer",
       "containerPort": 8080
     }
