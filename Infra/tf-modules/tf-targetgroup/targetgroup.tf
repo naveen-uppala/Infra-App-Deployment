@@ -25,3 +25,7 @@ resource "aws_lb_listener_rule" "alb_listener_rule" {
     }
   }
 }
+
+output "target_group_arn" {
+  value = aws_lb_target_group.ecs-alb-target-group.arn
+}
