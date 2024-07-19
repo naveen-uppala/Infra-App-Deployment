@@ -7,12 +7,12 @@ resource "aws_lb_target_group" "ecs-alb-target-group" {
   port        = var.targetgroup_name
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id      = "<+serviceVariables.VpcId"
+  vpc_id      = var.VpcId
 }
 
 resource "aws_lb_listener_rule" "alb_listener_rule" {
-  listener_arn = "<+serviceVariables.containerport>"
-  priority     = "<+serviceVariables.PriorityNumber>"
+  listener_arn = var.listenerArn
+  priority     = var.priorityNumber
 
   action {
     type             = "forward"
@@ -21,7 +21,7 @@ resource "aws_lb_listener_rule" "alb_listener_rule" {
 
   condition {
     path_pattern {
-      values = ["<+pipeline.variables.AppName>*"]
+      values = ["var.pathName"]
     }
   }
 }
