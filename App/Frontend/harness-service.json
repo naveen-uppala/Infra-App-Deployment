@@ -26,8 +26,8 @@
   "loadBalancers": [
     {
       "targetGroupArn": "<+serviceVariables.targetGroupArn>",
-      "containerName": "customer",
-      "containerPort": 8080
+      "containerName": "<+serviceVariables.containername>",
+      "containerPort": "<+serviceVariables.containerport>"
     }
   ]
 }
