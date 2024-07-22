@@ -1,5 +1,5 @@
 {
-  "desiredCount": 2,
+  "desiredCount": "<+serviceVariables.DesiredCount>",
   "launchType": "FARGATE",
   "serviceName": "<+serviceVariables.containername>",
   "deploymentConfiguration": {
@@ -13,12 +13,12 @@
   "networkConfiguration": {
     "awsvpcConfiguration": {
       "subnets": [
-        "subnet-0a2aebbdf06fc888b",
-        "subnet-0073844bcbf183fd0",
-        "subnet-0aa476740e263c06b"  
+        "<+serviceVariables.SubnetA>",
+        "<+serviceVariables.SubnetB>",
+        "<+serviceVariables.SubnetC>"  
       ],
       "securityGroups": [
-        "sg-0ce6d0f5bd402dab9" 
+        "<+serviceVariables.SecurityGroup>", 
       ],
       "assignPublicIp": "ENABLED"
     }
