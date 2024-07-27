@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: 851271747310.dkr.ecr.ap-south-1.amazonaws.com/customer
+  repository: 381492302819.dkr.ecr.us-east-2.amazonaws.com/customer
   pullPolicy: Always
   containerPort: 8080
   # Overrides the image tag whose default is the chart appVersion.
