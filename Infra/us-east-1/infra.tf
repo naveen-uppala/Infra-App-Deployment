@@ -1,12 +1,12 @@
 provider "aws" {
-  region = "ap-south-2"
+  region = "us-east-2"
 }
 
 terraform {
     backend "s3" {
         bucket = "terraform-s3-tcn"
         key    = "tcn/terraform.tfstate"
-        region     = "ap-south-2"
+        region     = "us-east-2"
         dynamodb_table = "dynamodb-state-locking"
     }
 }
@@ -18,10 +18,10 @@ terraform {
 
  module "ecs_cluster" {
    depends_on=[module.iam_policies_roles]
-   source = "../tf-modules/tf-ECS-EC2"
+   source = "../tf-modules/tf-ECS-FARGATE"
    ecs_node_profile_name = module.iam_policies_roles.ecs_node_profile_name
-   aws_vpc = "<+serviceVariables.vpcID"
-   aws_subnet = ["subnet-0a58f7bb36b69534a","subnet-0ca455ad1f587a812","subnet-0918669d0c271ee73"]
+   aws_vpc = "vpc-00383e29bb7567ac7"
+   aws_subnet = ["subnet-0a2aebbdf06fc888b","subnet-0073844bcbf183fd0","subnet-0aa476740e263c06b"]
  }
 
 /*
