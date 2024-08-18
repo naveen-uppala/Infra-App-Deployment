@@ -8,11 +8,11 @@ metadata:
   annotations:
     # Ingress Core Settings
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: subnet-0bc51c52f9e09d4e2, subnet-072b665a4756a3348, subnet-0103dbf4fd5c188b8  
+    alb.ingress.kubernetes.io/subnets: subnet-046040f1867b5fa44,subnet-0ecfadaa9189b4699,subnet-0eb3c69b3be2e45ef 
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:851271747310:certificate/82d9fb1a-183d-4759-a893-1c274ddccb5d
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:970974056881:certificate/ca95883c-7a31-46ba-adfd-4d191f2cd9d5
 
     
 spec:
@@ -28,11 +28,4 @@ spec:
         path: /customer*
         pathType: ImplementationSpecific
         
-      - backend:
-          service:
-            name: driver-service
-            port:
-              number: 8080
-        path: /driver*
-        pathType: ImplementationSpecific        
-        
+    
