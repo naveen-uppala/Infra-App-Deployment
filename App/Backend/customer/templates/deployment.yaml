@@ -22,7 +22,7 @@ spec:
       containers:
       - name: {{ .Chart.Name }}-container
         # image: "{{ .Values.image.repository }}:{{ .Values.image.tag  }}"
-        image: "{{ .Values.image }}"        ##Harness deployment
+        image: "{{ .Values.image.repository }}"        ##Harness deployment
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.image.containerPort }}
