@@ -1,7 +1,7 @@
 
 variable "cluster_name" {
   description = "The name of the EKS cluster"
-  default     = "example"
+  default     = "aws-devops-cluster"
 }
 
 variable "subnet_ids" {
@@ -11,7 +11,7 @@ variable "subnet_ids" {
 
 variable "node_instance_type" {
   description = "The EC2 instance type for the EKS nodes"
-  default     = "t3.medium"
+  default     = "t2.medium"
 }
 
 variable "node_desired_size" {
