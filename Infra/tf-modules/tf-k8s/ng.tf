@@ -1,6 +1,6 @@
-resource "aws_eks_node_group" "example" {
-  cluster_name    = aws_eks_cluster.example.name
-  node_group_name = var.cluster_name
+resource "aws_eks_node_group" "eks_node_group" {
+  cluster_name    = var.cluster_name
+  node_group_name = var.node_group_name
   node_role_arn   = var.node_group_role_arn
   subnet_ids      = var.subnet_ids
   capacity_type   = "ON_DEMAND"
