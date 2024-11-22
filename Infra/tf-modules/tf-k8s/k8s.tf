@@ -1,4 +1,4 @@
-resource "aws_eks_cluster" "example" {
+resource "aws_eks_cluster" "eks_cluster" {
   name     = var.cluster_name
   role_arn = var.cluster_role_arn
 
@@ -14,9 +14,9 @@ resource "aws_eks_cluster" "example" {
 }
 
 output "endpoint" {
-  value = aws_eks_cluster.example.endpoint
+  value = aws_eks_cluster.eks_cluster.endpoint
 }
 
 output "kubeconfig-certificate-authority-data" {
-  value = aws_eks_cluster.example.certificate_authority[0].data
+  value = aws_eks_cluster.eks_cluster.certificate_authority[0].data
 }
