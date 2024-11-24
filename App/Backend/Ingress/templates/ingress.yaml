@@ -13,7 +13,7 @@ metadata:
     alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
     # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:339712808268:certificate/af2592c8-9f73-4c35-9381-d060b71f5bea
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:054037107230:certificate/bf7575c8-8950-4363-95d6-06c6478c51ac
 
     
 spec:
