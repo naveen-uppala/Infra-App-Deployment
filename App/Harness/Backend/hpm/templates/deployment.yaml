@@ -21,19 +21,7 @@ spec:
     spec:
       containers:
       - name: {{ .Values.image.containerName }}-container
-        # image: "{{ .Values.image.repository }}:{{ .Values.image.tag  }}"
-        image: {{ .Values.image.repository }}        ##Harness deployment
+        image: {{ .Values.image.repository }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.image.containerPort }}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.image.containerName }}-service
-spec:
-  type: ClusterIP
-  ports:
-  - port: 8080
-  selector:
-    app: {{ .Values.image.containerName }}
