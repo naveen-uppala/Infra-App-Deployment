@@ -26,5 +26,5 @@ spec:
             name: {{ .Values.image.containerName }}-service
             port:
               number: 8080
-        path: /{{ .Values.ingress.path }}*
+        path: {{ .Values.ingress.path }}
         pathType: ImplementationSpecific
