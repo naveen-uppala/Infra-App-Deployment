@@ -2,14 +2,19 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+
+
 replicaCount: <+pipeline.stages.Deploy.variables.replicas>
 
 image:
   repository: <+artifact.image>
   pullPolicy: Always
   containerPort: 8080
+  containerName: <+pipeline.variables.AppName>
   # Overrides the image tag whose default is the chart appVersion.
 
+ingress:
+  path: <+pipeline.variables.routingRulePath>
 
 
 
