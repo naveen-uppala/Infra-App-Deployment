@@ -14,7 +14,7 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
 
 ingress:
-  path: <+pipeline.variables.routingRulePath>
+  path: <+pipeline.stages.Deploy.variables.routingRulePath>
 
 
 
