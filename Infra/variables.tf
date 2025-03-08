@@ -4,52 +4,52 @@ variable "region" {
   description   = "AWS Region"
 }
 
-variable "vpc-cidr" {
+variable "vpc_cidr" {
   type          = string
   description   = "VPC CIDR Block"
 }
 
-variable "web-tier-subnet-1-cidr" {
+variable "web_tier_subnet_1_cidr" {
   type          = string
   description   = "Public Subnet 1 CIDR Block"
 }
 
-variable "web-tier-subnet-2-cidr" {
+variable "web_tier_subnet_2_cidr" {
   type          = string
   description   = "Public Subnet 2 CIDR Block"
 }
 
-variable "web-tier-subnet-3-cidr" {
+variable "web_tier_subnet_3_cidr" {
   type          = string
   description   = "Public Subnet 3 CIDR Block"
 }
 
-variable "app-tier-subnet-1-cidr" {
+variable "app_tier_subnet_1_cidr" {
   type          = string
   description   = "Private Subnet 1 CIDR Block"
 }
 
-variable "app-tier-subnet-2-cidr" {
+variable "app_tier_subnet_2_cidr" {
   type          = string
   description   = "Private Subnet 2 CIDR Block"
 }
 
-variable "app-tier-subnet-3-cidr" {
+variable "app_tier_subnet_3_cidr" {
   type          = string
   description   = "Private Subnet 3 CIDR Block"
 }
 
-variable "data-tier-subnet-1-cidr" {
+variable "data_tier_subnet_1_cidr" {
   type          = string
   description   = "Private Subnet 4 CIDR Block"
 }
 
-variable "data-tier-subnet-2-cidr" {
+variable "data_tier_subnet_2_cidr" {
   type          = string
   description   = "Private Subnet 5 CIDR Block"
 }
 
-variable "data-tier-subnet-3-cidr" {
+variable "data_tier_subnet_3_cidr" {
   type          = string
   description   = "Private Subnet 6 CIDR Block"
 }
