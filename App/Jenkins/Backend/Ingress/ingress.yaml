@@ -7,7 +7,7 @@ metadata:
     app: packersmovers
   annotations:
     # Ingress Core Settings
-    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/scheme: internal
     alb.ingress.kubernetes.io/subnets: subnet-06f1c7b456295b271, subnet-0093a15737ee1bb9c, subnet-043e370b88e85a9fc  
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
