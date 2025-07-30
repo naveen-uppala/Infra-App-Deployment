@@ -14,8 +14,7 @@
     "awsvpcConfiguration": {
       "subnets": [
         "<+serviceVariables.SubnetA>",
-        "<+serviceVariables.SubnetB>",
-        "<+serviceVariables.SubnetC>"  
+        "<+serviceVariables.SubnetB>"
       ],
       "securityGroups": [
         "<+serviceVariables.SecurityGroup>", 
