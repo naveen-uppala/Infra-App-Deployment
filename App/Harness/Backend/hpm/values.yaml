@@ -15,6 +15,7 @@ image:
 
 ingress:
   path: <+pipeline.stages.Deploy.variables.routingRulePath>
+  certificateArn: "<+serviceVariables.certificateArn>"
   subnets:
     subnetA: "<+serviceVariables.subnetA>"
     subnetB: "<+serviceVariables.subnetB>"
