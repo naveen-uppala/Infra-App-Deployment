@@ -9,12 +9,16 @@ replicaCount: <+pipeline.stages.Deploy.variables.replicas>
 image:
   repository: <+artifact.image>
   pullPolicy: Always
-  containerPort: 8080
+  containerPort: <+pipeline.variables.containerPort>
   containerName: <+pipeline.variables.AppName>
   # Overrides the image tag whose default is the chart appVersion.
 
 ingress:
   path: <+pipeline.stages.Deploy.variables.routingRulePath>
+  subnets:
+    subnetA: "<+serviceVariables.subnetA>"
+    subnetB: "<+serviceVariables.subnetB>"
+    subnetC: "<+serviceVariables.subnetC>"
 
 
 
