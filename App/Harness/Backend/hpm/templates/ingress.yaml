@@ -7,13 +7,13 @@ metadata:
     app: packersmovers
   annotations:
     # Ingress Core Settings
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: subnet-05cac2fe1cf83f3de, subnet-0e77f68500c8f1b27, subnet-0e04418e020f00ea4  
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/subnets: {{ .Values.ingress.subnets.subnetA }}, {{ .Values.ingress.subnets.subnetB }}, {{ .Values.ingress.subnets.subnetC }}  
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
     # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:229531317213:certificate/049f014e-905a-4a64-aae4-4c0fda277b15
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.certificateArn }}
 
     
 spec:
@@ -25,6 +25,6 @@ spec:
           service:
             name: {{ .Values.image.containerName }}-service
             port:
-              number: 8080
+              number: {{ .Values.image.containerPort }}
         path: {{ .Values.ingress.path }}
         pathType: ImplementationSpecific
