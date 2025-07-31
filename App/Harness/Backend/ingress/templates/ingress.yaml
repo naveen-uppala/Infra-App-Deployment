@@ -11,21 +11,21 @@ metadata:
     alb.ingress.kubernetes.io/subnets: {{ .Values.ingress.subnets.subnetA }}, {{ .Values.ingress.subnets.subnetB }}, {{ .Values.ingress.subnets.subnetC }}  
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
-    # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
     alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.certificateArn }}
-    alb.ingress.kubernetes.io/security-groups: sg-068ac537db2eaf5a3
-
+    alb.ingress.kubernetes.io/security-groups:  {{ .Values.ingress.securitygroup }}
     
 spec:
   ingressClassName: alb
   rules:
-  - http:
-      paths:
-      - backend:
-          service:
-            name: {{ .Values.image.containerName }}-service
-            port:
-              number: {{ .Values.image.containerPort }}
-        path: {{ .Values.ingress.path }}
-        pathType: ImplementationSpecific
+    - http:
+        paths:
+          {{- range .Values.routes }}
+          - path: {{ .path }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .serviceName }}
+                port:
+                  number: {{ .servicePort }}
+

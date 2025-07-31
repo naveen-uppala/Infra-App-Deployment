@@ -14,12 +14,7 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
 
 ingress:
-  path: <+pipeline.stages.Deploy.variables.routingRulePath>
-  certificateArn: "<+serviceVariables.certificateArn>"
-  subnets:
-    subnetA: "<+serviceVariables.subnetA>"
-    subnetB: "<+serviceVariables.subnetB>"
-    subnetC: "<+serviceVariables.subnetC>"
+  enabled: false
 
 
 

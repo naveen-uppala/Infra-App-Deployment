@@ -1,0 +1,22 @@
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+ingress:
+  certificateArn: "<+serviceVariables.certificateArn>"
+  securitygroup: "<+serviceVariables.ingress_securitygroup>"
+  subnets:
+    subnetA: "<+serviceVariables.subnetA>"
+    subnetB: "<+serviceVariables.subnetB>"
+    subnetC: "<+serviceVariables.subnetC>"
+
+
+routes:
+  - path: /customer*
+    serviceName: customer-service
+    servicePort: 8080
+  - path: /driver*
+    serviceName: drriver-service
+    servicePort: 8080
+
+
