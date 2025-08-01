@@ -17,7 +17,7 @@ routes:
     servicePort: 8080
     
   - path: /driver*
-    serviceName: drriver-service
+    serviceName: driver-service
     servicePort: 8080
 
 
