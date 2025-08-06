@@ -13,6 +13,9 @@ provider "aws" {
 
  module "aws_sg" {
    source = "./modules/tf-sg"
+
+   # Forward root input to child module
+   vpc_id  = var.vpc_id
  }
 
 
