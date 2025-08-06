@@ -6,7 +6,7 @@ provider "aws" {
 resource "aws_security_group" "tcn_security_grp" {
   name        = "tcn Security Group"
   description = "security group for allowing SSH traffic to EC2 instances"
-  vpc_id      = "vpc-0d63abbc242241731"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 22
