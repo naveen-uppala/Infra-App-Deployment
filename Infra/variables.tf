@@ -53,3 +53,11 @@ variable "data_tier_subnet_3_cidr" {
   type          = string
   description   = "Private Subnet 6 CIDR Block"
 }
+
+
+# VPC Variables
+
+variable "vpc_id" {
+  # type       = string
+  description   = "VPC for creating a custom security group"
+}
