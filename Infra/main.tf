@@ -11,7 +11,7 @@ provider "aws" {
 #     }
 # }
 
- module "aws_vpc" {
+ module "aws_sg" {
    source = "./modules/tf-sg"
  }
 
