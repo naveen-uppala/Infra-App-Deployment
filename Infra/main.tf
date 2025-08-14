@@ -12,8 +12,8 @@ provider "aws" {
   region = var.region
 }
 
-module "vpc" {
-  source   = "./modules/vpc"
+module "tf-vpc" {
+  source   = "./modules/tf-vpc"
 
   vpc_name = var.vpc_name
   vpc_cidr = var.vpc_cidr
