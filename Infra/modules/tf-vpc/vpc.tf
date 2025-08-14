@@ -1,161 +1,146 @@
-
-# Create VPC
-resource "aws_vpc" "vpc" {
-  cidr_block              = var.vpc_cidr
-  instance_tenancy        = "default"
-  enable_dns_hostnames    = true
-
-  tags      = {
-    Name    = "CloudNation VPC"
-  }
+data "aws_availability_zones" "available" {
+  state = "available"
 }
 
-# Create Internet Gateway and Attach it to VPC
-resource "aws_internet_gateway" "internet-gateway" {
-  vpc_id    = aws_vpc.vpc.id
+locals {
+  # Use the first 3 AZs for your private subnets (web/app/data across AZ a/b/c)
+  azs = slice(data.aws_availability_zones.available.names, 0, 3)
 
-  tags      = {
-    Name    = "CN IGW"
+  # We will carve /20s from the VPC CIDR using cidrsubnet(vpc_cidr, 4, index)
+  # /16 + 4 new bits = /20; 0..9 indexes give 10 subnets total.
+
+  public_subnet = {
+    name  = "Public-Subnet-1"
+    index = 0
+    az    = local.azs[0]       # place the public subnet in the first AZ
   }
+
+  private_subnets = [
+    # web-tier (indexes 1..3)
+    { name = "web-tier-subnet-1",  index = 1, az = local.azs[0] },
+    { name = "web-tier-subnet-2",  index = 2, az = local.azs[1] },
+    { name = "web-tier-subnet-3",  index = 3, az = local.azs[2] },
+    # app-tier (indexes 4..6)
+    { name = "app-tier-subnet-1",  index = 4, az = local.azs[0] },
+    { name = "app-tier-subnet-2",  index = 5, az = local.azs[1] },
+    { name = "app-tier-subnet-3",  index = 6, az = local.azs[2] },
+    # data-tier (indexes 7..9)
+    { name = "data-tier-subnet-1", index = 7, az = local.azs[0] },
+    { name = "data-tier-subnet-2", index = 8, az = local.azs[1] },
+    { name = "data-tier-subnet-3", index = 9, az = local.azs[2] },
+  ]
+
+  private_subnets_by_name = {
+    for s in local.private_subnets : s.name => s
+  }
+
+  common_tags = merge(
+    { "Project" = "Cloud Nation" },
+    var.tags
+  )
 }
 
-# Create Public Subnet 1
-resource "aws_subnet" "web-tier-subnet-1" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.web-tier-subnet-1-cidr
-  availability_zone       = "${var.region}a"
+# VPC
+resource "aws_vpc" "this" {
+  cidr_block           = var.vpc_cidr
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+  tags = merge(local.common_tags, {
+    "Name" = var.vpc_name
+  })
+}
+
+# Internet Gateway
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.this.id
+  tags = merge(local.common_tags, {
+    "Name" = "internet gateway"
+  })
+}
+
+# Public subnet (in first AZ), /20
+resource "aws_subnet" "public" {
+  vpc_id                  = aws_vpc.this.id
+  availability_zone       = local.public_subnet.az
+  cidr_block              = cidrsubnet(var.vpc_cidr, 4, local.public_subnet.index)
   map_public_ip_on_launch = true
-
-  tags      = {
-    Name    = "web-tier-subnet-1"
-  }
+  tags = merge(local.common_tags, {
+    "Name" = local.public_subnet.name
+    "Tier" = "public"
+  })
 }
 
-# Create Public Subnet 2
-resource "aws_subnet" "web-tier-subnet-2" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.web-tier-subnet-2-cidr
-  availability_zone       = "${var.region}b"
-  map_public_ip_on_launch = true
-
-  tags      = {
-    Name    = "web-tier-subnet-2"
-  }
+# Elastic IP for single NAT
+resource "aws_eip" "nat" {
+  domain = "vpc"
+  tags = merge(local.common_tags, {
+    "Name" = "Natgateway EIP"
+  })
 }
 
-# Create Public Subnet 3
-resource "aws_subnet" "web-tier-subnet-3" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.web-tier-subnet-3-cidr
-  availability_zone       = "${var.region}c"
-  map_public_ip_on_launch = true
+# NAT Gateway (in the public subnet)
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public.id
+  tags = merge(local.common_tags, {
+    "Name" = "Natgateway"
+  })
 
-  tags      = {
-    Name    = "web-tier-subnet-3"
-  }
+  depends_on = [aws_internet_gateway.igw]
 }
 
-# Create Route Table and Add Public Route
-resource "aws_route_table" "public-route-table" {
-  vpc_id       = aws_vpc.vpc.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.internet-gateway.id
-  }
-
-  tags       = {
-    Name     = "Public Route Table"
-  }
+# Public route table (default route to IGW)
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.this.id
+  tags = merge(local.common_tags, {
+    "Name" = "public route table"
+  })
 }
 
-# Associate Public Subnet 1 to "Public Route Table"
-resource "aws_route_table_association" "web-tier-subnet-1-route-table-association" {
-  subnet_id           = aws_subnet.web-tier-subnet-1.id
-  route_table_id      = aws_route_table.public-route-table.id
+resource "aws_route" "public_default" {
+  route_table_id         = aws_route_table.public.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
 }
 
-# Associate Public Subnet 2 to "Public Route Table"
-resource "aws_route_table_association" "web-tier-subnet-2-route-table-association" {
-  subnet_id           = aws_subnet.web-tier-subnet-2.id
-  route_table_id      = aws_route_table.public-route-table.id
+# Associate public subnet to public RT
+resource "aws_route_table_association" "public_assoc" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.public.id
 }
 
-# Associate Public Subnet 3 to "Public Route Table"
-resource "aws_route_table_association" "web-tier-subnet-3-route-table-association" {
-  subnet_id           = aws_subnet.web-tier-subnet-3.id
-  route_table_id      = aws_route_table.public-route-table.id
+# Private subnets (9 total), /20 each, spread across 3 AZs
+resource "aws_subnet" "private" {
+  for_each = local.private_subnets_by_name
+
+  vpc_id            = aws_vpc.this.id
+  availability_zone = each.value.az
+  cidr_block        = cidrsubnet(var.vpc_cidr, 4, each.value.index)
+
+  tags = merge(local.common_tags, {
+    "Name" = each.key
+    "Tier" = "private"
+  })
 }
 
-# Create Private Subnet 1
-resource "aws_subnet" "app-tier-subnet-1" {
-  vpc_id                   = aws_vpc.vpc.id
-  cidr_block               = var.app-tier-subnet-1-cidr
-  availability_zone        = "${var.region}a"
-  map_public_ip_on_launch  = false
-
-  tags      = {
-    Name    = "app-tier-subnet-1"
-  }
+# Single private route table (default route to the single NAT)
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.this.id
+  tags = merge(local.common_tags, {
+    "Name" = "private route table"
+  })
 }
 
-
-# Create Private Subnet 2
-resource "aws_subnet" "app-tier-subnet-2" {
-  vpc_id                   = aws_vpc.vpc.id
-  cidr_block               = var.app-tier-subnet-2-cidr
-  availability_zone        = "${var.region}b"
-  map_public_ip_on_launch  = false
-
-  tags      = {
-    Name    = "app-tier-subnet-2"
-  }
+resource "aws_route" "private_default" {
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat.id
 }
 
-# Create Private Subnet 3
-resource "aws_subnet" "app-tier-subnet-3" {
-  vpc_id                   = aws_vpc.vpc.id
-  cidr_block               = var.app-tier-subnet-3-cidr
-  availability_zone        = "${var.region}c"
-  map_public_ip_on_launch  = false
+# Associate ALL 9 private subnets to the single private RT
+resource "aws_route_table_association" "private_assoc" {
+  for_each = aws_subnet.private
 
-  tags      = {
-    Name    = "app-tier-subnet-3"
-  }
-}
-
-# Create Private Subnet 4
-resource "aws_subnet" "data-tier-subnet-1" {
-  vpc_id                   = aws_vpc.vpc.id
-  cidr_block               = var.data-tier-subnet-1-cidr
-  availability_zone        = "${var.region}a"
-  map_public_ip_on_launch  = false
-
-  tags      = {
-    Name    = "data-tier-subnet-1"
-  }
-}
-
-# Create Private Subnet 5
-resource "aws_subnet" "data-tier-subnet-2" {
-  vpc_id                   = aws_vpc.vpc.id
-  cidr_block               = var.data-tier-subnet-2-cidr
-  availability_zone        = "${var.region}b"
-  map_public_ip_on_launch  = false
-
-  tags      = {
-    Name    = "data-tier-subnet-2"
-  }
-}
-
-# Create Private Subnet 6
-resource "aws_subnet" "data-tier-subnet-3" {
-  vpc_id                   = aws_vpc.vpc.id
-  cidr_block               = var.data-tier-subnet-3-cidr
-  availability_zone        = "${var.region}c"
-  map_public_ip_on_launch  = false
-
-  tags      = {
-    Name    = "data-tier-subnet-3"
-  }
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.private.id
 }
