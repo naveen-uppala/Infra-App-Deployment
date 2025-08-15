@@ -40,7 +40,7 @@ module "tf-ecs" {
   tags                      = var.tags
 }
 
-module "ecr" {
+module "tf-ecr" {
   source              = "./modules/tf-ecr"
   repository_names    = var.ecr_repository_names
   tags                = var.tags
