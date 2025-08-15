@@ -19,3 +19,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "ecs_cluster_name" {
+  description = "ECS Cluster name"
+  type        = string
+  default     = "cloud-nation-ecs"
+}
