@@ -10,25 +10,16 @@ output "private_subnet_ids" {
   value = module.tf-vpc.private_subnet_ids
 }
 
-/*
-output "internet_gateway_id" {
-  value = module.tf-vpc.internet_gateway_id
-}
-
-output "nat_gateway_id" {
-  value = module.tf-vpc.nat_gateway_id
-}
-
-output "public_route_table_id" {
-  value = module.tf-vpc.public_route_table_id
-}
-
-output "private_route_table_id" {
-  value = module.tf-vpc.private_route_table_id
-}
-
-*/
-
 output "ecs_service_security_group_id" {
   value = module.tf-ecs.service_security_group_id
+}
+
+output "ecr_repo_urls" {
+  description = "Map repo_name => repository URL"
+  value       = module.ecr.repo_urls
+}
+
+output "ecr_repo_arns" {
+  description = "Map repo_name => repository ARN"
+  value       = module.ecr.repo_arns
 }
