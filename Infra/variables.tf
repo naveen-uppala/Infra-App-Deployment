@@ -31,3 +31,16 @@ variable "ecr_repository_names" {
   type        = list(string)
   default     = ["frontend", "customer", "driver"]
 }
+
+variable "eks_cluster_name" {
+  description = "EKS cluster name"
+  type        = string
+  default     = "cloud-nation-eks"
+}
+
+variable "eks_version" {
+  description = "EKS control plane version"
+  type        = string
+  default     = "1.29"
+}
+
