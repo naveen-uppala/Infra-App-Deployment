@@ -16,10 +16,10 @@ output "ecs_service_security_group_id" {
 
 output "ecr_repo_urls" {
   description = "Map repo_name => repository URL"
-  value       = module.ecr.repo_urls
+  value       = module.tf-ecr.repo_urls
 }
 
 output "ecr_repo_arns" {
   description = "Map repo_name => repository ARN"
-  value       = module.ecr.repo_arns
+  value       = module.tf-ecr.repo_arns
 }
