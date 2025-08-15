@@ -30,5 +30,5 @@ output "private_route_table_id" {
 */
 
 output "ecs_service_security_group_id" {
-  value = module.ecs.service_security_group_id
+  value = module.tf-ecs.service_security_group_id
 }
