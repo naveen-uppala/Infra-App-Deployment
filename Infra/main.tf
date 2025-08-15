@@ -12,6 +12,20 @@ provider "aws" {
   region = var.region
 }
 
+# Pick the 3 web-tier subnets from the VPC outputs
+locals {
+  web_tier_subnet_ids = [
+    module.tf-vpc.private_subnet_ids["web-tier-subnet-1"],
+    module.tf-vpc.private_subnet_ids["web-tier-subnet-2"],
+    module.tf-vpc.private_subnet_ids["web-tier-subnet-3"],
+  ],
+  app_tier_subnet_ids = [
+    module.vpc.private_subnet_ids["app-tier-subnet-1"],
+    module.vpc.private_subnet_ids["app-tier-subnet-2"],
+    module.vpc.private_subnet_ids["app-tier-subnet-3"],
+  ]
+}
+
 module "tf-vpc" {
   source   = "./modules/tf-vpc"
 
@@ -20,16 +34,6 @@ module "tf-vpc" {
   tags     = var.tags
 }
 
-# Pick the 3 web-tier subnets from the VPC outputs
-locals {
-  web_tier_subnet_ids = [
-    module.tf-vpc.private_subnet_ids["web-tier-subnet-1"],
-    module.tf-vpc.private_subnet_ids["web-tier-subnet-2"],
-    module.tf-vpc.private_subnet_ids["web-tier-subnet-3"],
-  ]
-}
-
-# --- New ECS module ---
 module "tf-ecs" {
   source                    = "./modules/tf-ecs"
   cluster_name              = var.ecs_cluster_name
@@ -38,6 +42,17 @@ module "tf-ecs" {
   enable_container_insights = true
   use_fargate_providers     = true
   tags                      = var.tags
+}
+
+
+module "tf-eks" {
+  source       = "../tf-eks"    # path to the module folder below
+  region       = var.region
+  cluster_name = var.eks_cluster_name
+  eks_version  = var.eks_version
+
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = local.app_tier_subnet_ids
 }
 
 module "tf-ecr" {
