@@ -10,6 +10,7 @@ output "private_subnet_ids" {
   value = module.tf-vpc.private_subnet_ids
 }
 
+/*
 output "internet_gateway_id" {
   value = module.tf-vpc.internet_gateway_id
 }
@@ -24,4 +25,10 @@ output "public_route_table_id" {
 
 output "private_route_table_id" {
   value = module.tf-vpc.private_route_table_id
+}
+
+*/
+
+output "ecs_service_security_group_id" {
+  value = module.ecs.service_security_group_id
 }
