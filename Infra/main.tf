@@ -39,3 +39,9 @@ module "tf-ecs" {
   use_fargate_providers     = true
   tags                      = var.tags
 }
+
+module "ecr" {
+  source              = "./modules/tf-ecr"
+  repository_names    = var.ecr_repository_names
+  tags                = var.tags
+}
