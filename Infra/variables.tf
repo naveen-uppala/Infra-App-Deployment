@@ -25,3 +25,9 @@ variable "ecs_cluster_name" {
   type        = string
   default     = "cloud-nation-ecs"
 }
+
+variable "ecr_repository_names" {
+  description = "List of ECR repo names to create"
+  type        = list(string)
+  default     = ["frontend", "customer", "driver"]
+}
