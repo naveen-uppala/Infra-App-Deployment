@@ -29,9 +29,9 @@ output "app_tier_subnet_ids" {
 }
 
 output "eks_cluster_name" {
-  value = module["tf-eks"].tf_eks_cluster_name
+  value = module.tf-eks.tf_eks_cluster_name
 }
 
 output "eks_cluster_sg_id" {
-  value = module["tf-eks"].tf_eks_cluster_security_group_id
+  value = module.tf-eks.tf_eks_cluster_security_group_id
 }
