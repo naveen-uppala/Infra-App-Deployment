@@ -46,7 +46,7 @@ module "tf-ecs" {
 
 
 module "tf-eks" {
-  source       = "../tf-eks"    # path to the module folder below
+  source       = "./modules/tf-eks"    # path to the module folder below
   region       = var.region
   cluster_name = var.eks_cluster_name
   eks_version  = var.eks_version
