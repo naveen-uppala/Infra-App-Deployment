@@ -1,3 +1,4 @@
+// modules/alb-controller/variables.tf
 variable "cluster_name" {
   description = "EKS cluster name"
   type        = string
@@ -22,8 +23,8 @@ variable "vpc_id" {
 
 variable "account_id" {
   description = "AWS Account ID"
-  type = string 
-} 
+  type        = string
+}
 
 variable "controller_tag" {
   description = "Git tag for controller repo used to fetch the IAM policy (e.g., v2.13.3). Use 'main' to track latest."
