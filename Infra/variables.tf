@@ -3,6 +3,12 @@ variable "region" {
   type        = string
 }
 
+variable "vpc_id" {
+  description = "VPC ID (optional but recommended in some environments)"
+  type        = string
+  default     = null
+}
+
 variable "vpc_name" {
   description = "Name tag for the VPC."
   type        = string
@@ -44,3 +50,19 @@ variable "eks_version" {
   default     = "1.29"
 }
 
+variable "cluster_oidc_provider_arn" {
+  description = "ARN of the cluster's OIDC provider (IRSA). Enable OIDC on the cluster first."
+  type        = string
+}
+
+variable "controller_tag" {
+  description = "Git tag for controller repo to fetch official IAM policy (e.g., v2.13.3). Use 'main' to track latest."
+  type        = string
+  default     = "v2.13.3"
+}
+
+variable "chart_version" {
+  description = "Helm chart version for aws-load-balancer-controller (e.g., 1.13.4). Empty = latest."
+  type        = string
+  default     = "1.13.4"
+}
