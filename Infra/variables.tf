@@ -1,3 +1,4 @@
+// Infra/variables.tf
 variable "region" {
   description = "AWS region to deploy into (e.g., us-east-1)."
   type        = string
@@ -38,7 +39,7 @@ variable "ecr_repository_names" {
   default     = ["frontend", "customer", "driver"]
 }
 
-variable "account_id" { 
+variable "account_id" {
   description = "AWS Account ID"
   type        = string
 }
