@@ -62,7 +62,7 @@ provider "kubernetes" {
     args        = [
       "eks", "get-token",
       "--region", var.region,
-      "--cluster-name", module.tf-eks.tf_eks_cluster_name
+      "--cluster-name", module.tf-eks.eks_cluster_name
     ]
   }
 }
@@ -78,7 +78,7 @@ provider "helm" {
       args        = [
         "eks", "get-token",
         "--region", var.region,
-        "--cluster-name", module.tf-eks.tf_eks_cluster_name
+        "--cluster-name", module.tf-eks.eks_cluster_name
       ]
     }
   }
