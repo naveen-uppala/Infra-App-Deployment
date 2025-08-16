@@ -38,6 +38,11 @@ variable "ecr_repository_names" {
   default     = ["frontend", "customer", "driver"]
 }
 
+variable "account_id" { 
+  description = "AWS Account ID"
+  type        = string
+}
+
 variable "eks_cluster_name" {
   description = "EKS cluster name"
   type        = string
