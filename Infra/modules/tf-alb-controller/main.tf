@@ -91,7 +91,7 @@ resource "helm_release" "alb_controller" {
 
   set {
     name  = "clusterName"
-    value = var.cluster_name
+    value = var.eks_cluster_name
   }
   
   set {
