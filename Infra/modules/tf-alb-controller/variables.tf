@@ -9,8 +9,9 @@ variable "region" {
 }
 
 variable "cluster_oidc_provider_arn" {
-  description = "OIDC provider ARN for the EKS cluster (IRSA)"
+  description = "Optional override. If null, module computes it from the cluster's issuer + account id."
   type        = string
+  default     = null
 }
 
 variable "vpc_id" {
