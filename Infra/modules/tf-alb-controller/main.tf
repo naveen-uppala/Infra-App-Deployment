@@ -10,21 +10,23 @@ terraform {
   }
 }
 
-# Discover the cluster issuer URL from AWS
+# Get the EKS OIDC issuer URL
 data "aws_eks_cluster" "this" {
   name = var.eks_cluster_name
 }
 
-locals {
-  issuer_url         = data.aws_eks_cluster.this.identity[0].oidc[0].issuer
-  issuer_host_path   = replace(local.issuer_url, "https://", "")
-  computed_oidc_arn  = "arn:aws:iam::${var.account_id}:oidc-provider/${local.issuer_host_path}"
-  effective_oidc_arn = coalesce(var.cluster_oidc_provider_arn, local.computed_oidc_arn)
+# Fetch the TLS fingerprint for the issuer
+data "tls_certificate" "oidc" {
+  url = data.aws_eks_cluster.this.identity[0].oidc[0].issuer
 }
 
-data "aws_iam_openid_connect_provider" "eks" {
-  arn = local.effective_oidc_arn
+# CREATE the OIDC provider (one per cluster/account)
+resource "aws_iam_openid_connect_provider" "eks" {
+  url             = data.aws_eks_cluster.this.identity[0].oidc[0].issuer
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.oidc.certificates[0].sha1_fingerprint]
 }
+
 
 data "http" "alb_policy" {
   url = "https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/${var.controller_tag}/docs/install/iam_policy.json"
