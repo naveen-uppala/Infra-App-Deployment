@@ -77,7 +77,7 @@ module "tf-eks" {
 module "alb_controller" {
   source   = "./modules/tf-alb-controller"
 
-  cluster_name   = var.cluster_name
+  cluster_name   = var.eks_cluster_name
   region         = var.region
   account_id     = var.account_id
   vpc_id         = var.vpc_id
