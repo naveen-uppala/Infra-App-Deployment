@@ -79,17 +79,44 @@ resource "helm_release" "alb_controller" {
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
   namespace  = kubernetes_namespace.kube_system.metadata[0].name
-  version    = var.chart_version
 
-  set { name = "clusterName";           value = var.cluster_name }
-  set { name = "serviceAccount.create"; value = "false" }
-  set { name = "serviceAccount.name";   value = kubernetes_service_account.alb.metadata[0].name }
-  set { name = "region";                value = var.region }
+  # If var.chart_version == "", Helm provider prefers null (use latest)
+  version    = var.chart_version != "" ? var.chart_version : null
 
-  dynamic "set" {
-    for_each = var.vpc_id == null ? [] : [var.vpc_id]
-    content { name = "vpcId"; value = set.value }
+  # Required values (each attribute on its own line)
+  set {
+    name  = "clusterName"
+    value = var.cluster_name
   }
 
-  depends_on = [kubernetes_service_account.alb, aws_iam_role_policy_attachment.alb_attach]
+  set {
+    name  = "serviceAccount.create"
+    value = "false"
+  }
+
+  set {
+    name  = "serviceAccount.name"
+    value = kubernetes_service_account.alb.metadata[0].name
+  }
+
+  # Recommended in some environments
+  set {
+    name  = "region"
+    value = var.region
+  }
+
+  # Optional
+  dynamic "set" {
+    for_each = var.vpc_id == null ? [] : [var.vpc_id]
+    content {
+      name  = "vpcId"
+      value = set.value
+    }
+  }
+
+  depends_on = [
+    kubernetes_service_account.alb,
+    aws_iam_role_policy_attachment.alb_attach
+  ]
 }
+
