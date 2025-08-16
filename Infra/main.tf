@@ -44,7 +44,7 @@ module "tf-ecs" {
   tags                      = var.tags
 }
 
-
+/*
 module "tf-eks" {
   source       = "./modules/tf-eks"    # path to the module folder below
   cluster_name = var.eks_cluster_name
@@ -53,7 +53,7 @@ module "tf-eks" {
   vpc_id     = module.tf-vpc.vpc_id
   subnet_ids = local.app_tier_subnet_ids
 }
-
+*/
 module "tf-ecr" {
   source              = "./modules/tf-ecr"
   repository_names    = var.ecr_repository_names
