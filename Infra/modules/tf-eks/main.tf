@@ -46,6 +46,10 @@ resource "aws_eks_cluster" "tf_eks_cluster" {
     public_access_cidrs     = []
   }
 
+  access_config {
+    authentication_mode = "API_AND_CONFIG_MAP"
+  }
+
   depends_on = [aws_iam_role_policy_attachment.tf_eks_cluster_policy]
 }
 
