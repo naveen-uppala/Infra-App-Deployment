@@ -31,7 +31,7 @@ data "http" "alb_policy" {
 }
 
 resource "aws_iam_policy" "alb" {
-  name        = "AWSLoadBalancerControllerIAMPolicy-${var.cluster_name}"
+  name        = "AWSLoadBalancerControllerIAMPolicy-${var.eks_cluster_name}"
   description = "Policy for AWS Load Balancer Controller (${var.controller_tag})"
   policy      = data.http.alb_policy.response_body
 }
@@ -43,7 +43,7 @@ locals {
 }
 
 resource "aws_iam_role" "alb_irsa" {
-  name = "EKS-ALB-Controller-${var.cluster_name}"
+  name = "EKS-ALB-Controller-${var.eks_cluster_name}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
