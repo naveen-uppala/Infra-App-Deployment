@@ -32,6 +32,7 @@ resource "aws_iam_role_policy_attachment" "tf_eks_cluster_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
+/*
 # EKS cluster (private endpoint only)
 resource "aws_eks_cluster" "tf_eks_cluster" {
   name     = var.cluster_name
@@ -106,3 +107,4 @@ resource "aws_eks_node_group" "tf_eks_ng" {
     aws_iam_role_policy_attachment.tf_eks_node_cni
   ]
 }
+*/
