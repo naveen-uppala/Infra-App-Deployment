@@ -1,5 +1,5 @@
 // modules/alb-controller/variables.tf
-variable "cluster_name" {
+variable "eks_cluster_name" {
   description = "EKS cluster name"
   type        = string
 }
