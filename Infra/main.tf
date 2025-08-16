@@ -54,6 +54,7 @@ module "tf-vpc" {
 
 module "tf-ecs" {
   source                    = "./modules/tf-ecs"
+
   cluster_name              = var.ecs_cluster_name
   vpc_id                    = module.tf-vpc.vpc_id
   subnet_ids                = local.web_tier_subnet_ids
@@ -65,32 +66,28 @@ module "tf-ecs" {
 
 module "tf-eks" {
   source       = "./modules/tf-eks"    # path to the module folder below
-  cluster_name = var.eks_cluster_name
-  eks_version  = var.eks_version
 
-  vpc_id     = module.tf-vpc.vpc_id
-  subnet_ids = local.app_tier_subnet_ids
+  cluster_name  = var.eks_cluster_name
+  eks_version   = var.eks_version
+  vpc_id        = module.tf-vpc.vpc_id
+  subnet_ids    = local.app_tier_subnet_ids
 }
 
 
 module "alb_controller" {
-  source = "./modules/alb-controller"
+  source   = "./modules/alb-controller"
 
-  cluster_name               = var.cluster_name
-  region                     = var.region
-  cluster_oidc_provider_arn  = var.cluster_oidc_provider_arn
-  vpc_id                     = var.vpc_id
-
-  # pin or float versions per your policy
-  controller_tag             = var.controller_tag     # e.g., "v2.13.3" or "main"
-  chart_version              = var.chart_version      # e.g., "1.13.4" or ""
-
-  # inherit providers from root (optional; default inheritance works too)
-  # providers = { aws = aws, kubernetes = kubernetes, helm = helm }
+  cluster_name   = var.cluster_name
+  region         = var.region
+  account_id     = var.account_id
+  vpc_id         = var.vpc_id
+  controller_tag = var.controller_tag
+  chart_version  = var.chart_version
 }
 
 module "tf-ecr" {
   source              = "./modules/tf-ecr"
+
   repository_names    = var.ecr_repository_names
   tags                = var.tags
 }
