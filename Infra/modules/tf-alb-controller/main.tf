@@ -39,7 +39,7 @@ resource "aws_iam_policy" "alb" {
 locals {
   sa_namespace = "kube-system"
   sa_name      = "aws-load-balancer-controller"
-  oidc_url     = replace(data.aws_iam_openid_connect_provider.eks.url, "https://", "")
+  oidc_url     = replace(aws_iam_openid_connect_provider.eks.url, "https://", "")
 }
 
 resource "aws_iam_role" "alb_irsa" {
