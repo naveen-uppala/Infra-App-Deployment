@@ -89,10 +89,21 @@ resource "helm_release" "alb_controller" {
 
   version    = var.chart_version != "" ? var.chart_version : null
 
-  set { name = "clusterName";           value = var.cluster_name }
-  set { name = "serviceAccount.create"; value = "false" }
-  set { name = "serviceAccount.name";   value = kubernetes_service_account.alb.metadata[0].name }
-  set { name = "region";                value = var.region }
+  set {
+    name  = "clusterName"
+    value = var.cluster_name
+  }
+  
+  set {
+    name  = "serviceAccount.create"
+    value = "false"
+  }
+  
+  set {
+    name  = "serviceAccount.name"
+    value = "aws-load-balancer-controller"
+  }
+
 
   dynamic "set" {
     for_each = var.vpc_id == null ? [] : [var.vpc_id]
