@@ -12,7 +12,7 @@ terraform {
 
 # Discover the cluster issuer URL from AWS
 data "aws_eks_cluster" "this" {
-  name = var.cluster_name
+  name = var.eks_cluster_name
 }
 
 locals {
