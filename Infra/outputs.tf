@@ -34,11 +34,11 @@ output "app_tier_subnet_ids" {
 }
 
 output "alb_controller_irsa_role_arn" {
-  value       = module.alb_controller.irsa_role_arn
+  value       = module.alb-controller.irsa_role_arn
   description = "IRSA role ARN used by the controller service account"
 }
 
 output "alb_controller_service_account" {
-  value       = module.alb_controller.service_account
+  value       = module.alb-controller.service_account
   description = "Namespace/name of the controller service account"
 }
