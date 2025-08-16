@@ -10,6 +10,6 @@ output "service_account" {
 }
 
 output "oidc_provider_arn" {
-  value       = data.aws_iam_openid_connect_provider.eks.arn
+  value       = aws_iam_openid_connect_provider.eks.arn
   description = "OIDC provider arn"
 }
