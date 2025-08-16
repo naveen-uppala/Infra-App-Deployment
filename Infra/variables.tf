@@ -55,11 +55,6 @@ variable "eks_version" {
   default     = "1.29"
 }
 
-variable "cluster_oidc_provider_arn" {
-  description = "ARN of the cluster's OIDC provider (IRSA). Enable OIDC on the cluster first."
-  type        = string
-}
-
 variable "controller_tag" {
   description = "Git tag for controller repo to fetch official IAM policy (e.g., v2.13.3). Use 'main' to track latest."
   type        = string
