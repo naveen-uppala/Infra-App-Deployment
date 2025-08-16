@@ -1,7 +1,7 @@
 // modules/tf-eks/main.tf
 # Security group for the EKS control plane
 resource "aws_security_group" "tf_eks_cluster" {
-  name        = "${var.cluster_name}-cluster-sg"
+  name        = "${var.eks_cluster_name}-cluster-sg"
   description = "Security group for EKS control plane"
   vpc_id      = var.vpc_id
 
@@ -16,7 +16,7 @@ resource "aws_security_group" "tf_eks_cluster" {
 
 # IAM role for EKS control plane
 resource "aws_iam_role" "tf_eks_cluster" {
-  name = "${var.cluster_name}-cluster-role"
+  name = "${var.eks_cluster_name}-cluster-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
@@ -34,7 +34,7 @@ resource "aws_iam_role_policy_attachment" "tf_eks_cluster_policy" {
 
 # EKS cluster (private endpoint only)
 resource "aws_eks_cluster" "tf_eks_cluster" {
-  name     = var.cluster_name
+  name     = var.eks_cluster_name
   role_arn = aws_iam_role.tf_eks_cluster.arn
   version  = var.eks_version
 
@@ -55,7 +55,7 @@ resource "aws_eks_cluster" "tf_eks_cluster" {
 
 # Node group IAM role
 resource "aws_iam_role" "tf_eks_node" {
-  name = "${var.cluster_name}-node-role"
+  name = "${var.eks_cluster_name}-node-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
@@ -82,7 +82,7 @@ resource "aws_iam_role_policy_attachment" "tf_eks_node_cni" {
 # Managed node group (SPOT; t3.medium/t2.medium)
 resource "aws_eks_node_group" "tf_eks_ng" {
   cluster_name    = aws_eks_cluster.tf_eks_cluster.name
-  node_group_name = "${var.cluster_name}-ng"
+  node_group_name = "${var.eks_cluster_name}-ng"
   node_role_arn   = aws_iam_role.tf_eks_node.arn
   subnet_ids      = var.subnet_ids
 
