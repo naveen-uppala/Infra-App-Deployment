@@ -1,3 +1,4 @@
+// modules/alb-controller/outputs.tf
 output "irsa_role_arn" {
   value       = aws_iam_role.alb_irsa.arn
   description = "IRSA role ARN for the controller"
@@ -8,7 +9,7 @@ output "service_account" {
   description = "Controller ServiceAccount in namespace/name format"
 }
 
-output "oidc_provider_arn" { 
-  value = data.aws_iam_openid_connect_provider.eks.arn
+output "oidc_provider_arn" {
+  value       = data.aws_iam_openid_connect_provider.eks.arn
   description = "OIDC provider arn"
 }
