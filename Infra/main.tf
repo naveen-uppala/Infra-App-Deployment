@@ -75,7 +75,7 @@ module "tf-eks" {
 
 
 module "alb_controller" {
-  source   = "./modules/alb-controller"
+  source   = "./modules/tf-alb-controller"
 
   cluster_name   = var.cluster_name
   region         = var.region
