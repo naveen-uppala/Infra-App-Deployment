@@ -1,3 +1,4 @@
+// modules/tf-eks/variables.tf
 variable "cluster_name" {
   description = "EKS cluster name"
   type        = string
@@ -18,3 +19,4 @@ variable "eks_version" {
   type        = string
   default     = "1.29"
 }
+
