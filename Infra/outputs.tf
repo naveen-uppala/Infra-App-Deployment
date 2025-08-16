@@ -28,12 +28,12 @@ output "app_tier_subnet_ids" {
   value = local.app_tier_subnet_ids
 }
 
-/*
-output "eks_cluster_name" {
-  value = module.tf-eks.tf_eks_cluster_name
+output "alb_controller_irsa_role_arn" {
+  value       = module.alb_controller.irsa_role_arn
+  description = "IRSA role ARN used by the controller service account"
 }
 
-output "eks_cluster_sg_id" {
-  value = module.tf-eks.tf_eks_cluster_security_group_id
+output "alb_controller_service_account" {
+  value       = module.alb_controller.service_account
+  description = "Namespace/name of the controller service account"
 }
-*/
