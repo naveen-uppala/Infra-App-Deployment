@@ -84,7 +84,7 @@ provider "helm" {
   }
 }
 
-module "alb_controller" {
+module "tf-alb-controller" {
   source         = "./modules/tf-alb-controller"   # matches the files you sent
   eks_cluster_name = var.eks_cluster_name
   region         = var.region
