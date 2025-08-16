@@ -1,4 +1,4 @@
-
+// modules/tf-eks/main.tf
 # Security group for the EKS control plane
 resource "aws_security_group" "tf_eks_cluster" {
   name        = "${var.cluster_name}-cluster-sg"
@@ -106,4 +106,3 @@ resource "aws_eks_node_group" "tf_eks_ng" {
     aws_iam_role_policy_attachment.tf_eks_node_cni
   ]
 }
-
