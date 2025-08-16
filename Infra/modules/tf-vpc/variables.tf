@@ -1,3 +1,4 @@
+// modules/tf-vpc/variables.tf
 variable "vpc_name" {
   description = "Name tag for the VPC."
   type        = string
