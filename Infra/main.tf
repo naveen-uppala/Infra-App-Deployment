@@ -85,7 +85,7 @@ provider "helm" {
 }
 
 module "alb_controller" {
-  source         = "./modules/alb-controller"   # matches the files you sent
+  source         = "./modules/tf-alb-controller"   # matches the files you sent
   cluster_name   = module.tf-eks.tf_eks_cluster_name
   region         = var.region
   account_id     = var.account_id
