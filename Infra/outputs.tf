@@ -1,3 +1,4 @@
+// Infra/outputs.tf
 output "vpc_id" {
   value = module.tf-vpc.vpc_id
 }
@@ -25,7 +26,11 @@ output "ecr_repo_arns" {
 }
 
 output "app_tier_subnet_ids" {
-  value = local.app_tier_subnet_ids
+  value = [
+    module.tf-vpc.private_subnet_ids["app-tier-subnet-1"],
+    module.tf-vpc.private_subnet_ids["app-tier-subnet-2"],
+    module.tf-vpc.private_subnet_ids["app-tier-subnet-3"],
+  ]
 }
 
 output "alb_controller_irsa_role_arn" {
