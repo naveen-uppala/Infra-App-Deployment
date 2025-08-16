@@ -1,7 +1,24 @@
-# Child module: creates IAM policy+role (IRSA), k8s ServiceAccount, and Helm release
+
+# We already have providers wired from root.
+
+# Discover the cluster issuer URL (e.g., https://oidc.eks.ap-south-1.amazonaws.com/id/XXXX)
+data "aws_eks_cluster" "this" {
+  name = var.cluster_name
+}
+
+locals {
+  issuer_url        = data.aws_eks_cluster.this.identity[0].oidc[0].issuer
+  issuer_host_path  = replace(local.issuer_url, "https://", "")   # oidc.eks.ap-south-1.amazonaws.com/id/XXXX
+  computed_oidc_arn = "arn:aws:iam::${var.account_id}:oidc-provider/${local.issuer_host_path}"
+  effective_oidc_arn = coalesce(var.cluster_oidc_provider_arn, local.computed_oidc_arn)
+}
+
+# Use the effective ARN (must already exist in the account — create once per cluster if needed)
+data "aws_iam_openid_connect_provider" "eks" {
+  arn = local.effective_oidc_arn
+}
 
 
-# --- Pull the official IAM policy from the controller repo (tagged for reproducibility) ---
 data "http" "alb_policy" {
   url = "https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/${var.controller_tag}/docs/install/iam_policy.json"
 }
@@ -10,11 +27,6 @@ resource "aws_iam_policy" "alb" {
   name        = "AWSLoadBalancerControllerIAMPolicy-${var.cluster_name}"
   description = "Policy for AWS Load Balancer Controller (${var.controller_tag})"
   policy      = data.http.alb_policy.response_body
-}
-
-# --- IRSA role bound to the controller ServiceAccount ---
-data "aws_iam_openid_connect_provider" "eks" {
-  arn = var.cluster_oidc_provider_arn
 }
 
 locals {
@@ -47,7 +59,6 @@ resource "aws_iam_role_policy_attachment" "alb_attach" {
   policy_arn = aws_iam_policy.alb.arn
 }
 
-# --- K8s namespace & ServiceAccount with IRSA annotation ---
 resource "kubernetes_namespace" "kube_system" {
   metadata { name = local.sa_namespace }
 }
@@ -63,46 +74,22 @@ resource "kubernetes_service_account" "alb" {
   }
 }
 
-# --- Helm install of the controller chart ---
 resource "helm_release" "alb_controller" {
   name       = "aws-load-balancer-controller"
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
   namespace  = kubernetes_namespace.kube_system.metadata[0].name
-
-  # Pin chart version (empty string will use the latest available)
   version    = var.chart_version
 
-  # Required values
-  set {
-    name  = "clusterName"
-    value = var.cluster_name
-  }
-  set {
-    name  = "serviceAccount.create"
-    value = "false"
-  }
-  set {
-    name  = "serviceAccount.name"
-    value = kubernetes_service_account.alb.metadata[0].name
-  }
-
-  # Recommended/sometimes required depending on environment
-  set {
-    name  = "region"
-    value = var.region
-  }
+  set { name = "clusterName";           value = var.cluster_name }
+  set { name = "serviceAccount.create"; value = "false" }
+  set { name = "serviceAccount.name";   value = kubernetes_service_account.alb.metadata[0].name }
+  set { name = "region";                value = var.region }
 
   dynamic "set" {
     for_each = var.vpc_id == null ? [] : [var.vpc_id]
-    content {
-      name  = "vpcId"
-      value = set.value
-    }
+    content { name = "vpcId"; value = set.value }
   }
 
-  depends_on = [
-    kubernetes_service_account.alb,
-    aws_iam_role_policy_attachment.alb_attach
-  ]
+  depends_on = [kubernetes_service_account.alb, aws_iam_role_policy_attachment.alb_attach]
 }
