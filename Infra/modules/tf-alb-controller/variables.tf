@@ -9,12 +9,6 @@ variable "region" {
   type        = string
 }
 
-variable "cluster_oidc_provider_arn" {
-  description = "Optional override. If null, module computes it from the cluster's issuer + account id."
-  type        = string
-  default     = null
-}
-
 variable "vpc_id" {
   description = "VPC ID (optional)"
   type        = string
