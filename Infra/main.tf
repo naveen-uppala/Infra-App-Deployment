@@ -1,16 +1,34 @@
 terraform {
   required_version = ">= 1.5.0"
   required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 5.0"
-    }
+    aws =         { source  = "hashicorp/aws", version = ">= 5.0" }
+    kubernetes = { source = "hashicorp/kubernetes", version = ">= 2.27" }
+    helm  =      { source = "hashicorp/helm",       version = ">= 2.11" }
   }
 }
 
 provider "aws" {
   region = var.region
 }
+
+# Look up the EKS cluster to wire up k8s/helm providers
+data "aws_eks_cluster" "this" { name = var.cluster_name }
+data "aws_eks_cluster_auth" "this" { name = var.cluster_name }
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.this.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.this.token
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = data.aws_eks_cluster.this.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
+    token                  = data.aws_eks_cluster_auth.this.token
+  }
+}
+
 
 # Pick the 3 web-tier subnets from the VPC outputs
 locals {
@@ -44,7 +62,7 @@ module "tf-ecs" {
   tags                      = var.tags
 }
 
-/*
+
 module "tf-eks" {
   source       = "./modules/tf-eks"    # path to the module folder below
   cluster_name = var.eks_cluster_name
@@ -53,7 +71,24 @@ module "tf-eks" {
   vpc_id     = module.tf-vpc.vpc_id
   subnet_ids = local.app_tier_subnet_ids
 }
-*/
+
+
+module "alb_controller" {
+  source = "./modules/alb-controller"
+
+  cluster_name               = var.cluster_name
+  region                     = var.region
+  cluster_oidc_provider_arn  = var.cluster_oidc_provider_arn
+  vpc_id                     = var.vpc_id
+
+  # pin or float versions per your policy
+  controller_tag             = var.controller_tag     # e.g., "v2.13.3" or "main"
+  chart_version              = var.chart_version      # e.g., "1.13.4" or ""
+
+  # inherit providers from root (optional; default inheritance works too)
+  # providers = { aws = aws, kubernetes = kubernetes, helm = helm }
+}
+
 module "tf-ecr" {
   source              = "./modules/tf-ecr"
   repository_names    = var.ecr_repository_names
