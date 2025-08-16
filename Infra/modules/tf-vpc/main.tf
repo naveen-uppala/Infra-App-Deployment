@@ -1,64 +1,46 @@
+// modules/tf-vpc/main.tf
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 locals {
-  # Use the first 3 AZs for your private subnets (web/app/data across AZ a/b/c)
   azs = slice(data.aws_availability_zones.available.names, 0, 3)
-
-  # We will carve /20s from the VPC CIDR using cidrsubnet(vpc_cidr, 4, index)
-  # /16 + 4 new bits = /20; 0..9 indexes give 10 subnets total.
 
   public_subnet = {
     name  = "Public-Subnet-1"
     index = 0
-    az    = local.azs[0]       # place the public subnet in the first AZ
+    az    = local.azs[0]
   }
 
   private_subnets = [
-    # web-tier (indexes 1..3)
     { name = "web-tier-subnet-1",  index = 1, az = local.azs[0] },
     { name = "web-tier-subnet-2",  index = 2, az = local.azs[1] },
     { name = "web-tier-subnet-3",  index = 3, az = local.azs[2] },
-    # app-tier (indexes 4..6)
     { name = "app-tier-subnet-1",  index = 4, az = local.azs[0] },
     { name = "app-tier-subnet-2",  index = 5, az = local.azs[1] },
     { name = "app-tier-subnet-3",  index = 6, az = local.azs[2] },
-    # data-tier (indexes 7..9)
     { name = "data-tier-subnet-1", index = 7, az = local.azs[0] },
     { name = "data-tier-subnet-2", index = 8, az = local.azs[1] },
     { name = "data-tier-subnet-3", index = 9, az = local.azs[2] },
   ]
 
-  private_subnets_by_name = {
-    for s in local.private_subnets : s.name => s
-  }
+  private_subnets_by_name = { for s in local.private_subnets : s.name => s }
 
-  common_tags = merge(
-    { "Project" = "Cloud Nation" },
-    var.tags
-  )
+  common_tags = merge({ "Project" = "Cloud Nation" }, var.tags)
 }
 
-# VPC
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
-  tags = merge(local.common_tags, {
-    "Name" = var.vpc_name
-  })
+  tags = merge(local.common_tags, { "Name" = var.vpc_name })
 }
 
-# Internet Gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.this.id
-  tags = merge(local.common_tags, {
-    "Name" = "internet gateway"
-  })
+  tags   = merge(local.common_tags, { "Name" = "internet gateway" })
 }
 
-# Public subnet (in first AZ), /20
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.this.id
   availability_zone       = local.public_subnet.az
@@ -70,31 +52,21 @@ resource "aws_subnet" "public" {
   })
 }
 
-# Elastic IP for single NAT
 resource "aws_eip" "nat" {
   domain = "vpc"
-  tags = merge(local.common_tags, {
-    "Name" = "Natgateway EIP"
-  })
+  tags   = merge(local.common_tags, { "Name" = "Natgateway EIP" })
 }
 
-# NAT Gateway (in the public subnet)
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
   subnet_id     = aws_subnet.public.id
-  tags = merge(local.common_tags, {
-    "Name" = "Natgateway"
-  })
-
-  depends_on = [aws_internet_gateway.igw]
+  tags          = merge(local.common_tags, { "Name" = "Natgateway" })
+  depends_on    = [aws_internet_gateway.igw]
 }
 
-# Public route table (default route to IGW)
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
-  tags = merge(local.common_tags, {
-    "Name" = "public route table"
-  })
+  tags   = merge(local.common_tags, { "Name" = "public route table" })
 }
 
 resource "aws_route" "public_default" {
@@ -103,13 +75,11 @@ resource "aws_route" "public_default" {
   gateway_id             = aws_internet_gateway.igw.id
 }
 
-# Associate public subnet to public RT
 resource "aws_route_table_association" "public_assoc" {
   subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public.id
 }
 
-# Private subnets (9 total), /20 each, spread across 3 AZs
 resource "aws_subnet" "private" {
   for_each = local.private_subnets_by_name
 
@@ -123,12 +93,9 @@ resource "aws_subnet" "private" {
   })
 }
 
-# Single private route table (default route to the single NAT)
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.this.id
-  tags = merge(local.common_tags, {
-    "Name" = "private route table"
-  })
+  tags   = merge(local.common_tags, { "Name" = "private route table" })
 }
 
 resource "aws_route" "private_default" {
@@ -137,10 +104,8 @@ resource "aws_route" "private_default" {
   nat_gateway_id         = aws_nat_gateway.nat.id
 }
 
-# Associate ALL 9 private subnets to the single private RT
 resource "aws_route_table_association" "private_assoc" {
   for_each = aws_subnet.private
-
   subnet_id      = each.value.id
   route_table_id = aws_route_table.private.id
 }
