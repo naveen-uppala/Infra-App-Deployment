@@ -43,7 +43,7 @@ resource "aws_eks_cluster" "tf_eks_cluster" {
     security_group_ids      = [aws_security_group.tf_eks_cluster.id]
     endpoint_private_access = false
     endpoint_public_access  = true
-    public_access_cidrs     = [0.0.0.0/0]
+    public_access_cidrs     = ["0.0.0.0/0"]
   }
 
   access_config {
