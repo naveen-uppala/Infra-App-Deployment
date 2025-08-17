@@ -40,6 +40,11 @@ output "eks_cluster_endpoint" {
 output "eks_cluster_ca_data" {
   value = module.tf-eks.tf_eks_cluster_ca_data
 }
+
+output "region" {
+  value = var.region
+}
+
 output "eks_cluster_name" {
   value = module.tf-eks.tf_eks_cluster_name
 }
