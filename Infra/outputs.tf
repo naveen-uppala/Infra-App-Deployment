@@ -11,6 +11,7 @@ output "private_subnet_ids" {
   value = module.tf-vpc.private_subnet_ids
 }
 
+/*
 output "ecs_service_security_group_id" {
   value = module.tf-ecs.service_security_group_id
 }
@@ -25,6 +26,7 @@ output "ecr_repo_arns" {
   value       = module.tf-ecr.repo_arns
 }
 
+*/
 output "app_tier_subnet_ids" {
   value = [
     module.tf-vpc.private_subnet_ids["app-tier-subnet-1"],
