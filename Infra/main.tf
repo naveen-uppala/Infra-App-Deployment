@@ -35,6 +35,7 @@ locals {
   ]
 }
 
+/*
 module "tf-ecs" {
   source                    = "./modules/tf-ecs"
   cluster_name              = var.ecs_cluster_name
@@ -44,6 +45,7 @@ module "tf-ecs" {
   use_fargate_providers     = true
   tags                      = var.tags
 }
+*/
 
 module "tf-eks" {
   source       = "./modules/tf-eks"
@@ -54,8 +56,10 @@ module "tf-eks" {
 }
 
 
+/*
 module "tf-ecr" {
   source           = "./modules/tf-ecr"
   repository_names = var.ecr_repository_names
   tags             = var.tags
 }
+*/
