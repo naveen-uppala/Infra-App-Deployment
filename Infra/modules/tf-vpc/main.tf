@@ -6,22 +6,23 @@ data "aws_availability_zones" "available" {
 locals {
   azs = slice(data.aws_availability_zones.available.names, 0, 3)
 
-  public_subnet = {
-    name  = "Public-Subnet-1"
-    index = 0
-    az    = local.azs[0]
-  }
+
+  public_subnets = [
+    { name = "Public-Subnet-1",  index = 0, az = local.azs[0] },
+    { name = "Public-Subnet-2",  index = 1, az = local.azs[1] },
+    { name = "Public-Subnet-3",  index = 2, az = local.azs[2] },
+  ]
 
   private_subnets = [
-    { name = "web-tier-subnet-1",  index = 1, az = local.azs[0] },
-    { name = "web-tier-subnet-2",  index = 2, az = local.azs[1] },
-    { name = "web-tier-subnet-3",  index = 3, az = local.azs[2] },
-    { name = "app-tier-subnet-1",  index = 4, az = local.azs[0] },
-    { name = "app-tier-subnet-2",  index = 5, az = local.azs[1] },
-    { name = "app-tier-subnet-3",  index = 6, az = local.azs[2] },
-    { name = "data-tier-subnet-1", index = 7, az = local.azs[0] },
-    { name = "data-tier-subnet-2", index = 8, az = local.azs[1] },
-    { name = "data-tier-subnet-3", index = 9, az = local.azs[2] },
+    { name = "web-tier-subnet-1",  index = 3, az = local.azs[0] },
+    { name = "web-tier-subnet-2",  index = 4, az = local.azs[1] },
+    { name = "web-tier-subnet-3",  index = 5, az = local.azs[2] },
+    { name = "app-tier-subnet-1",  index = 6, az = local.azs[0] },
+    { name = "app-tier-subnet-2",  index = 7, az = local.azs[1] },
+    { name = "app-tier-subnet-3",  index = 8, az = local.azs[2] },
+    { name = "data-tier-subnet-1", index = 9, az = local.azs[0] },
+    { name = "data-tier-subnet-2", index = 10, az = local.azs[1] },
+    { name = "data-tier-subnet-3", index = 11, az = local.azs[2] },
   ]
 
   private_subnets_by_name = { for s in local.private_subnets : s.name => s }
@@ -43,11 +44,11 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.this.id
-  availability_zone       = local.public_subnet.az
-  cidr_block              = cidrsubnet(var.vpc_cidr, 4, local.public_subnet.index)
+  availability_zone       = local.public_subnets.az
+  cidr_block              = cidrsubnet(var.vpc_cidr, 4, local.public_subnets.index)
   map_public_ip_on_launch = true
   tags = merge(local.common_tags, {
-    "Name" = local.public_subnet.name
+    "Name" = local.public_subnets.name
     "Tier" = "public"
   })
 }
