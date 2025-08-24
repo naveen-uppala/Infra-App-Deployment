@@ -1,4 +1,11 @@
-// Infra/outputs.tf
+
+
+// VPC Outputs
+
+output "region" {
+  value = var.region
+}
+
 output "vpc_id" {
   value = module.tf-vpc.vpc_id
 }
@@ -11,22 +18,6 @@ output "private_subnet_ids" {
   value = module.tf-vpc.private_subnet_ids
 }
 
-/*
-output "ecs_service_security_group_id" {
-  value = module.tf-ecs.service_security_group_id
-}
-
-output "ecr_repo_urls" {
-  description = "Map repo_name => repository URL"
-  value       = module.tf-ecr.repo_urls
-}
-
-output "ecr_repo_arns" {
-  description = "Map repo_name => repository ARN"
-  value       = module.tf-ecr.repo_arns
-}
-
-*/
 output "app_tier_subnet_ids" {
   value = [
     module.tf-vpc.private_subnet_ids["app-tier-subnet-1"],
@@ -35,7 +26,33 @@ output "app_tier_subnet_ids" {
   ]
 }
 
+// ECS Outputs
 
+/*
+output "ecs_service_security_group_id" {
+  value = module.tf-ecs.service_security_group_id
+}
+*/
+
+// ECR Outputs 
+
+/*
+output "ecr_repo_urls" {
+  description = "Map repo_name => repository URL"
+  value       = module.tf-ecr.repo_urls
+}
+
+
+output "ecr_repo_arns" {
+  description = "Map repo_name => repository ARN"
+  value       = module.tf-ecr.repo_arns
+}
+
+*/
+
+// EKS Outputs 
+
+/*
 output "eks_cluster_endpoint" {
   value = module.tf-eks.tf_eks_cluster_endpoint
 }
@@ -43,10 +60,8 @@ output "eks_cluster_ca_data" {
   value = module.tf-eks.tf_eks_cluster_ca_data
 }
 
-output "region" {
-  value = var.region
-}
-
 output "eks_cluster_name" {
   value = module.tf-eks.tf_eks_cluster_name
 }
+*/
+
