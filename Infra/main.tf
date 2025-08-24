@@ -47,6 +47,7 @@ module "tf-ecs" {
 }
 */
 
+/*
 module "tf-eks" {
   source       = "./modules/tf-eks"
   eks_cluster_name = var.eks_cluster_name
@@ -54,7 +55,7 @@ module "tf-eks" {
   vpc_id       = module.tf-vpc.vpc_id
   subnet_ids   = local.app_tier_subnet_ids
 }
-
+*/
 
 /*
 module "tf-ecr" {
