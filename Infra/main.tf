@@ -98,6 +98,7 @@ module "tf-eks" {
 module "tf-rds" {
   source          = "./modules/tf-rds"
   vpc_id          = module.tf-vpc.vpc_id
+  eks_nodes_sg_id  = module.tf-eks.tf_eks_cluster_security_group_id
   data_subnet_ids = local.data_tier_subnet_ids
   db_username     = var.db_username
   db_password     = var.db_password
