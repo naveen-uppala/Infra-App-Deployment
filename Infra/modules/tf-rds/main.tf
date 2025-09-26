@@ -5,15 +5,15 @@
 
 resource "aws_security_group" "rds_mysql_sg" {
   name        = "mysql-rds-sg"
-  description = "Allow MySQL access from anywhere"
+  description = "Allow MySQL access only from EKS worker nodes"
   vpc_id      = var.vpc_id
 
   ingress {
-    description = "Allow MySQL traffic from anywhere"
+    description = "Allow MySQL traffic from EKS worker nodes"
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    source_security_group_id = var.eks_nodes_sg_id
+    security_groups = [var.eks_nodes_sg_id]   
   }
 
   egress {
@@ -28,6 +28,7 @@ resource "aws_security_group" "rds_mysql_sg" {
     Name = "mysql-rds-sg"
   })
 }
+
 
 # ------------------ Subnet Group ------------------
 
