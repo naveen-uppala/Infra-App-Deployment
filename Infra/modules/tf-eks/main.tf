@@ -54,6 +54,20 @@ resource "aws_ec2_tag" "eks_default_sg_name" {
   depends_on = [aws_eks_cluster.tf_eks_cluster]
 }
 
+# Allow HTTPS traffic from Backend ALB to EKS control plane
+resource "aws_security_group_rule" "allow_backend_alb_to_eks" {
+  type                      = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  source_security_group_id = var.backend_alb_sg_id  
+  security_group_id        = aws_eks_cluster.tf_eks_cluster.vpc_config[0].cluster_security_group_id
+
+  description = "Allow HTTPS traffic from backend ALB to EKS control plane"
+  depends_on  = [aws_eks_cluster.tf_eks_cluster]
+}
+
+
 ###############################################
 # Node Group IAM Role
 ###############################################
