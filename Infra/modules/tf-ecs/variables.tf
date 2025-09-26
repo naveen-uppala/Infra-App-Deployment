@@ -13,6 +13,11 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "alb_security_group_id" {
+  type        = string
+  description = "Security group ID of the frontend ALB allowed to talk to ECS services"
+}
+
 variable "enable_container_insights" {
   description = "Enable CloudWatch Container Insights"
   type        = bool
