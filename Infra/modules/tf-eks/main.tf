@@ -110,6 +110,10 @@ resource "aws_eks_node_group" "tf_eks_ng" {
     max_unavailable = 1
   }
 
+  tags = {
+    Name = "${var.eks_cluster_name}-workernode"
+  }
+
   depends_on = [
     aws_iam_role_policy_attachment.tf_eks_node_worker,
     aws_iam_role_policy_attachment.tf_eks_node_ecr,
