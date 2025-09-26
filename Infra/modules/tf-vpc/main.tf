@@ -6,7 +6,6 @@ data "aws_availability_zones" "available" {
 locals {
   azs = slice(data.aws_availability_zones.available.names, 0, 3)
 
-
   public_subnets = [
     { name = "Public-Subnet-1",  index = 0, az = local.azs[0] },
     { name = "Public-Subnet-2",  index = 1, az = local.azs[1] },
@@ -25,7 +24,11 @@ locals {
     { name = "data-tier-subnet-3", index = 11, az = local.azs[2] },
   ]
 
+  # Keep your existing map for private subnets
   private_subnets_by_name = { for s in local.private_subnets : s.name => s }
+
+  # Add a map for public subnets to cleanly use for_each
+  public_subnets_by_name = { for s in local.public_subnets : s.name => s }
 
   common_tags = merge({ "Project" = "Cloud Nation" }, var.tags)
 }
@@ -42,13 +45,17 @@ resource "aws_internet_gateway" "igw" {
   tags   = merge(local.common_tags, { "Name" = "internet gateway" })
 }
 
+# ---------- PUBLIC SUBNETS ----------
 resource "aws_subnet" "public" {
+  for_each                = local.public_subnets_by_name
+
   vpc_id                  = aws_vpc.this.id
-  availability_zone       = local.public_subnets.az
-  cidr_block              = cidrsubnet(var.vpc_cidr, 4, local.public_subnets.index)
+  availability_zone       = each.value.az
+  cidr_block              = cidrsubnet(var.vpc_cidr, 4, each.value.index)
   map_public_ip_on_launch = true
+
   tags = merge(local.common_tags, {
-    "Name" = local.public_subnets.name
+    "Name" = each.key
     "Tier" = "public"
   })
 }
@@ -58,9 +65,10 @@ resource "aws_eip" "nat" {
   tags   = merge(local.common_tags, { "Name" = "Natgateway EIP" })
 }
 
+# Put NAT in the first public subnet deterministically
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public.id
+  subnet_id     = values(aws_subnet.public)[0].id
   tags          = merge(local.common_tags, { "Name" = "Natgateway" })
   depends_on    = [aws_internet_gateway.igw]
 }
@@ -76,11 +84,14 @@ resource "aws_route" "public_default" {
   gateway_id             = aws_internet_gateway.igw.id
 }
 
+# Associate ALL public subnets with the public RT
 resource "aws_route_table_association" "public_assoc" {
-  subnet_id      = aws_subnet.public.id
+  for_each      = aws_subnet.public
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
 
+# ---------- PRIVATE SUBNETS ----------
 resource "aws_subnet" "private" {
   for_each = local.private_subnets_by_name
 
@@ -105,8 +116,9 @@ resource "aws_route" "private_default" {
   nat_gateway_id         = aws_nat_gateway.nat.id
 }
 
+# Associate ALL private subnets with the private RT
 resource "aws_route_table_association" "private_assoc" {
-  for_each = aws_subnet.private
+  for_each      = aws_subnet.private
   subnet_id      = each.value.id
   route_table_id = aws_route_table.private.id
 }
