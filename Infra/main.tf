@@ -90,6 +90,7 @@ module "tf-eks" {
   eks_version  = var.eks_version
   vpc_id       = module.tf-vpc.vpc_id
   subnet_ids   = local.app_tier_subnet_ids
+  tags               = var.tags  
 }
 
 
