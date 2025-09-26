@@ -20,3 +20,8 @@ variable "eks_version" {
   default     = "1.29"
 }
 
+variable "tags" {
+  description = "Common tags to apply to resources"
+  type        = map(string)
+  default     = {}
+}
