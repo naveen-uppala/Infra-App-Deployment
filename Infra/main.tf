@@ -23,6 +23,11 @@ module "tf-vpc" {
 
 # Pick the web/app-tier subnets from VPC outputs
 locals {
+  public_subnet_ids  = [
+    module.tf-vpc.public_subnet_ids["Public-Subnet-1"],
+    module.tf-vpc.public_subnet_ids["Public-Subnet-2"],
+    module.tf-vpc.public_subnet_ids["Public-Subnet-3"],
+  ]
   web_tier_subnet_ids = [
     module.tf-vpc.private_subnet_ids["web-tier-subnet-1"],
     module.tf-vpc.private_subnet_ids["web-tier-subnet-2"],
@@ -41,6 +46,14 @@ locals {
 
 }
 
+module "tf-alb" {
+  source             = "./modules/tf-alb"
+  vpc_id             = module.tf-vpc.vpc_id
+  public_subnet_ids  = local.public_subnet_ids
+  alb_name           = "frontend-alb"
+  acm_certificate_arn = var.acm_certificate_arn  
+  tags               = var.tags
+}
 
 
 module "tf-ecr" {
