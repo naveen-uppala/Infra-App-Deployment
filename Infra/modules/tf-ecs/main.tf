@@ -49,7 +49,7 @@ resource "aws_security_group" "ecs_service" {
   }
 
   tags = merge(local.common_tags, {
-    Name = "ecs service sg"
+    Name = "ecs-service-sg"
   })
 }
 
