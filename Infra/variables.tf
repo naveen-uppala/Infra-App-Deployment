@@ -37,6 +37,12 @@ variable "db_name" {
   type        = string
 }
 
+# Passing a value through Harness workspace varibales
+variable "acm_certificate_arn" {
+  type        = string
+  description = "ARN of the ACM SSL certificate for the ALB HTTPS listener"
+}
+
 variable "db_instance_class" {
   description = "RDS instance type"
   type        = string
