@@ -52,6 +52,10 @@ output "ecr_repo_arns" {
 
 // EKS Outputs 
 
+output "eks_control_plane_sg_id" {
+  description = "Default EKS control plane security group ID created automatically by AWS"
+  value       = module.tf-eks.tf_eks_cluster_security_group_id
+}
 
 output "eks_cluster_endpoint" {
   value = module.tf-eks.tf_eks_cluster_endpoint
