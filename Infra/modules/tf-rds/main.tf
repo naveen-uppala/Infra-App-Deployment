@@ -13,7 +13,7 @@ resource "aws_security_group" "rds_mysql_sg" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    source_security_group_id = var.eks_nodes_sg_id
   }
 
   egress {
