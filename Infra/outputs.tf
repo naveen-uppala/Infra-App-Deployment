@@ -30,10 +30,10 @@ output "app_tier_subnet_ids" {
 // ECS Outputs
 
 
-output "ecs_service_security_group_id" {
-  value = module.tf-ecs.service_security_group_id
+output "ecs_service_sg_id" {
+  description = "Security group used by ECS tasks"
+  value       = aws_security_group.ecs_service.id
 }
-
 
 // ECR Outputs 
 
