@@ -42,16 +42,16 @@ locals {
 }
 
 
-/*
+
 module "tf-ecr" {
   source           = "./modules/tf-ecr"
   repository_names = var.ecr_repository_names
   tags             = var.tags
 }
-*/
 
 
-/*
+
+
 module "tf-ecs" {
   source                    = "./modules/tf-ecs"
   cluster_name              = var.ecs_cluster_name
@@ -61,9 +61,9 @@ module "tf-ecs" {
   use_fargate_providers     = true
   tags                      = var.tags
 }
-*/
 
-/*
+
+
 module "tf-eks" {
   source       = "./modules/tf-eks"
   eks_cluster_name = var.eks_cluster_name
@@ -71,7 +71,7 @@ module "tf-eks" {
   vpc_id       = module.tf-vpc.vpc_id
   subnet_ids   = local.app_tier_subnet_ids
 }
-*/
+
 
 module "tf-rds" {
   source          = "./modules/tf-rds"
