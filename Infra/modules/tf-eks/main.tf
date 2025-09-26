@@ -12,6 +12,7 @@ resource "aws_security_group" "tf_eks_cluster" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = []
   }
+  tags = merge(var.tags,{ Name = "${var.eks_cluster_name}-cluster-sg"})
 }
 
 # IAM role for EKS control plane
