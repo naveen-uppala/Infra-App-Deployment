@@ -33,3 +33,8 @@ variable "db_instance_class" {
   type        = string
   default     = "db.t3.micro"
 }
+
+variable "eks_nodes_sg_id" {
+  description = "Security group ID of EKS cluster & worker nodes"
+  type        = string
+}
