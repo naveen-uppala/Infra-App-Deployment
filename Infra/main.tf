@@ -33,7 +33,23 @@ locals {
     module.tf-vpc.private_subnet_ids["app-tier-subnet-2"],
     module.tf-vpc.private_subnet_ids["app-tier-subnet-3"],
   ]
+  data_tier_subnet_ids = [
+    module.tf-vpc.private_subnet_ids["data-tier-subnet-1"],
+    module.tf-vpc.private_subnet_ids["data-tier-subnet-2"],
+    module.tf-vpc.private_subnet_ids["data-tier-subnet-3"],
+  ]
+
 }
+
+
+/*
+module "tf-ecr" {
+  source           = "./modules/tf-ecr"
+  repository_names = var.ecr_repository_names
+  tags             = var.tags
+}
+*/
+
 
 /*
 module "tf-ecs" {
@@ -57,10 +73,13 @@ module "tf-eks" {
 }
 */
 
-/*
-module "tf-ecr" {
-  source           = "./modules/tf-ecr"
-  repository_names = var.ecr_repository_names
-  tags             = var.tags
+module "tf-rds" {
+  source          = "./modules/tf-rds"
+  vpc_id          = module.tf-vpc.vpc_id
+  data_subnet_ids = local.data_tier_subnet_ids
+  db_username     = var.db_username
+  db_password     = var.db_password
+  db_name         = var.db_name
+  db_instance_class = var.db_instance_class
+  tags = var.tags
 }
-*/
