@@ -50,6 +50,30 @@ variable "eks_cluster_name" {
   default     = "cloud-nation-eks"
 }
 
+variable "db_username" {
+  description = "Master username for the RDS instance"
+  type        = string
+}
+
+variable "db_password" {
+  description = "Master password for the RDS instance"
+  type        = string
+  sensitive   = true
+}
+
+variable "db_name" {
+  description = "Initial database name"
+  type        = string
+}
+
+variable "db_instance_class" {
+  description = "RDS instance type"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+
+
 variable "eks_version" {
   description = "EKS control plane version"
   type        = string
