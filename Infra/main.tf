@@ -75,6 +75,12 @@ module "tf-ecs" {
   tags                      = var.tags
 }
 
+module "backend_alb_sg" {
+  source                = "./modules/tf-backend-alb-sg"
+  vpc_id               = module.tf-vpc.vpc_id
+  ecs_security_group_id = module.tf-ecs.ecs_service_sg_id
+  tags                 = var.tags
+}
 
 
 module "tf-eks" {
