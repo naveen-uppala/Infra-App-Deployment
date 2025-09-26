@@ -1,11 +1,11 @@
 variable "vpc_id" {
   type        = string
-  description = "VPC ID where the ALB will be created"
+  description = "VPC ID"
 }
 
 variable "public_subnet_ids" {
   type        = list(string)
-  description = "List of public subnet IDs where the ALB will be deployed"
+  description = "List of public subnet IDs"
 }
 
 variable "tags" {
@@ -15,6 +15,11 @@ variable "tags" {
 
 variable "alb_name" {
   type        = string
+  description = "Name of the ALB"
   default     = "frontend-alb"
-  description = "Name of the Application Load Balancer"
+}
+
+variable "acm_certificate_arn" {
+  type        = string
+  description = "ARN of the ACM certificate for HTTPS listener"
 }
