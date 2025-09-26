@@ -14,6 +14,12 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "backend_alb_sg_id" {
+  description = "Security Group ID of the backend ALB that should be allowed to access EKS API"
+  type        = string
+}
+
+
 variable "eks_version" {
   description = "EKS control plane version"
   type        = string
