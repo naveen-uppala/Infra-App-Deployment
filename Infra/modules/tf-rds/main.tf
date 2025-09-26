@@ -4,6 +4,9 @@
 # ------------------ Security Group ------------------
 
 resource "aws_security_group" "rds_mysql_sg" {
+  lifecycle {
+    create_before_destroy = true
+  }
   name        = "mysql-rds-sg"
   description = "Allow MySQL access only from EKS worker nodes"
   vpc_id      = var.vpc_id
