@@ -41,9 +41,9 @@ resource "aws_eks_cluster" "tf_eks_cluster" {
   vpc_config {
     subnet_ids              = var.subnet_ids
     security_group_ids      = [aws_security_group.tf_eks_cluster.id]
-    endpoint_private_access = false
-    endpoint_public_access  = true
-    public_access_cidrs     = ["0.0.0.0/0"]
+    endpoint_private_access = true
+    endpoint_public_access  = false
+    #public_access_cidrs     = ["0.0.0.0/0"]
   }
 
   access_config {
@@ -87,11 +87,11 @@ resource "aws_eks_node_group" "tf_eks_ng" {
   subnet_ids      = var.subnet_ids
 
   capacity_type  = "SPOT"
-  instance_types = ["t3.medium", "t2.medium"]
+  instance_types = ["t2.medium", "t3.medium"]
   ami_type       = "AL2_x86_64"
 
   scaling_config {
-    desired_size = 1
+    desired_size = 2
     min_size     = 1
     max_size     = 1
   }
