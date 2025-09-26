@@ -1,13 +1,46 @@
 // Infra/variables.tf
+
+# Passing a value through Harness workspace varibales
 variable "region" {
-  description = "AWS region to deploy into (e.g., us-east-1)."
+  description = "AWS region to deploy into (e.g., us-east-2)."
   type        = string
 }
 
-variable "vpc_id" {
-  description = "VPC ID (optional but recommended in some environments)"
+# Passing a value through Harness workspace varibales
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC (e.g., 192.168.0.0/16)."
   type        = string
-  default     = null
+}
+
+# Passing a value through Harness workspace varibales
+variable "account_id" {
+  description = "AWS Account ID"
+  type        = string
+}
+
+# Passing a value through Harness workspace varibales
+variable "db_username" {
+  description = "Master username for the RDS instance"
+  type        = string
+}
+
+# Passing a value through Harness workspace varibales
+variable "db_password" {
+  description = "Master password for the RDS instance"
+  type        = string
+  sensitive   = true
+}
+
+# Passing a value through Harness workspace varibales
+variable "db_name" {
+  description = "Initial database name"
+  type        = string
+}
+
+variable "db_instance_class" {
+  description = "RDS instance type"
+  type        = string
+  default     = "db.t3.micro"
 }
 
 variable "vpc_name" {
@@ -16,10 +49,13 @@ variable "vpc_name" {
   default     = "Cloud Nation Vpc"
 }
 
-variable "vpc_cidr" {
-  description = "CIDR block for the VPC (e.g., 192.168.0.0/16)."
+
+variable "vpc_id" {
+  description = "VPC ID (optional but recommended in some environments)"
   type        = string
+  default     = null
 }
+
 
 variable "tags" {
   description = "Optional additional tags to apply to all resources."
@@ -39,28 +75,26 @@ variable "ecr_repository_names" {
   default     = ["frontend", "customer", "driver"]
 }
 
-variable "account_id" {
-  description = "AWS Account ID"
-  type        = string
-}
-
 variable "eks_cluster_name" {
   description = "EKS cluster name"
   type        = string
   default     = "cloud-nation-eks"
 }
 
+# Passing a value through Harness workspace varibales
 variable "db_username" {
   description = "Master username for the RDS instance"
   type        = string
 }
 
+# Passing a value through Harness workspace varibales
 variable "db_password" {
   description = "Master password for the RDS instance"
   type        = string
   sensitive   = true
 }
 
+# Passing a value through Harness workspace varibales
 variable "db_name" {
   description = "Initial database name"
   type        = string
