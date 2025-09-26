@@ -24,22 +24,24 @@ locals {
     { name = "data-tier-subnet-3", index = 11, az = local.azs[2] },
   ]
 
-  # Keep your existing map for private subnets
+  public_subnets_by_name  = { for s in local.public_subnets : s.name => s }
   private_subnets_by_name = { for s in local.private_subnets : s.name => s }
 
-  # Add a map for public subnets to cleanly use for_each
-  public_subnets_by_name = { for s in local.public_subnets : s.name => s }
+  # Map AZ to public subnet name to help routing later
+  public_subnet_by_az = { for s in local.public_subnets : s.az => s.name }
 
   common_tags = merge({ "Project" = "Cloud Nation" }, var.tags)
 }
 
+# ---------- VPC ----------
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
-  tags = merge(local.common_tags, { "Name" = var.vpc_name })
+  tags                 = merge(local.common_tags, { "Name" = var.vpc_name })
 }
 
+# ---------- IGW ----------
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.this.id
   tags   = merge(local.common_tags, { "Name" = "internet gateway" })
@@ -47,7 +49,7 @@ resource "aws_internet_gateway" "igw" {
 
 # ---------- PUBLIC SUBNETS ----------
 resource "aws_subnet" "public" {
-  for_each                = local.public_subnets_by_name
+  for_each = local.public_subnets_by_name
 
   vpc_id                  = aws_vpc.this.id
   availability_zone       = each.value.az
@@ -60,19 +62,24 @@ resource "aws_subnet" "public" {
   })
 }
 
+# ---------- NAT GATEWAYS ----------
+# Create one EIP per public subnet
 resource "aws_eip" "nat" {
-  domain = "vpc"
-  tags   = merge(local.common_tags, { "Name" = "Natgateway EIP" })
+  for_each = aws_subnet.public
+  domain   = "vpc"
+  tags     = merge(local.common_tags, { "Name" = "Natgateway EIP-${each.key}" })
 }
 
-# Put NAT in the first public subnet deterministically
+# Create one NAT GW per public subnet
 resource "aws_nat_gateway" "nat" {
-  allocation_id = aws_eip.nat.id
-  subnet_id     = values(aws_subnet.public)[0].id
-  tags          = merge(local.common_tags, { "Name" = "Natgateway" })
+  for_each      = aws_subnet.public
+  allocation_id = aws_eip.nat[each.key].id
+  subnet_id     = each.value.id
+  tags          = merge(local.common_tags, { "Name" = "Natgateway-${each.key}" })
   depends_on    = [aws_internet_gateway.igw]
 }
 
+# ---------- PUBLIC ROUTES ----------
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
   tags   = merge(local.common_tags, { "Name" = "public route table" })
@@ -84,7 +91,7 @@ resource "aws_route" "public_default" {
   gateway_id             = aws_internet_gateway.igw.id
 }
 
-# Associate ALL public subnets with the public RT
+# Associate ALL public subnets with public route table
 resource "aws_route_table_association" "public_assoc" {
   for_each      = aws_subnet.public
   subnet_id      = each.value.id
@@ -105,20 +112,31 @@ resource "aws_subnet" "private" {
   })
 }
 
+# ---------- PRIVATE ROUTE TABLES ----------
+# One route table per private subnet (best practice for per-AZ NAT)
 resource "aws_route_table" "private" {
+  for_each = aws_subnet.private
+
   vpc_id = aws_vpc.this.id
-  tags   = merge(local.common_tags, { "Name" = "private route table" })
+  tags   = merge(local.common_tags, { "Name" = "private route table - ${each.key}" })
 }
 
+# Add a default route per private subnet -> NAT in same AZ
 resource "aws_route" "private_default" {
-  route_table_id         = aws_route_table.private.id
+  for_each = aws_subnet.private
+
+  route_table_id         = aws_route_table.private[each.key].id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat.id
+
+  # Pick NAT GW in the same AZ
+  nat_gateway_id = aws_nat_gateway.nat[
+    local.public_subnet_by_az[each.value.availability_zone]
+  ].id
 }
 
-# Associate ALL private subnets with the private RT
+# Associate each private subnet with its route table
 resource "aws_route_table_association" "private_assoc" {
   for_each      = aws_subnet.private
   subnet_id      = each.value.id
-  route_table_id = aws_route_table.private.id
+  route_table_id = aws_route_table.private[each.key].id
 }
