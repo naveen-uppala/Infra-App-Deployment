@@ -5,8 +5,8 @@ resource "aws_security_group" "backend_alb_sg" {
 
   ingress {
     description      = "Allow traffic from ECS service"
-    from_port        = 80
-    to_port          = 80
+    from_port        = 443
+    to_port          = 443
     protocol         = "tcp"
     security_groups  = [var.ecs_security_group_id]
   }
