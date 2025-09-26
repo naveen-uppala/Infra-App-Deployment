@@ -41,6 +41,27 @@ resource "aws_vpc" "this" {
   tags                 = merge(local.common_tags, { "Name" = var.vpc_name })
 }
 
+# ---------- Default Secuirty Group ----------
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_vpc.this.id
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name        = "default-sg"
+  }
+}
+
 # ---------- IGW ----------
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.this.id
