@@ -8,7 +8,7 @@ output "alb_dns_name" {
   value       = aws_lb.frontend_alb.dns_name
 }
 
-output "alb_security_group_id" {
+output "alb_sg_id" {
   description = "Security group ID of the frontend ALB"
   value       = aws_security_group.alb_sg.id
 }
