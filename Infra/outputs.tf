@@ -69,6 +69,7 @@ output "alb_dns_name" {
   value = module.tf-alb.alb_dns_name
 }
 
-output "alb_security_group_id" {
-  value = module.tf-alb.alb_security_group_id
+output "alb_sg_id" {
+  description = "Security group ID of the frontend ALB"
+  value       = module.tf-alb.alb_sg_id 
 }
