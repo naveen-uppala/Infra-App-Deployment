@@ -68,6 +68,7 @@ module "tf-ecr" {
 module "tf-ecs" {
   source                    = "./modules/tf-ecs"
   cluster_name              = var.ecs_cluster_name
+  alb_security_group_id     = module.tf-alb.alb_sg_id
   vpc_id                    = module.tf-vpc.vpc_id
   subnet_ids                = local.web_tier_subnet_ids
   enable_container_insights = true
