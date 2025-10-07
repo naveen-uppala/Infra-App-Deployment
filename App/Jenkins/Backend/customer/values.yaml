@@ -5,7 +5,7 @@
 replicaCount: 2
 
 image:
-  repository: 841162679093.dkr.ecr.ap-south-1.amazonaws.com/customer
+  repository: 829357759650.dkr.ecr.ap-south-1.amazonaws.com/customer
   pullPolicy: Always
   containerName: customer
   containerPort: 8080
