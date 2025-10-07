@@ -33,14 +33,3 @@ spec:
           periodSeconds: 5         # Probe every 5 seconds
           timeoutSeconds: 2         # Timeout if the probe takes longer than 2 seconds
           failureThreshold: 3       # Mark the Pod as not ready after 3 consecutive failures        
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Chart.Name }}-service
-spec:
-  type: ClusterIP
-  ports:
-  - port: {{ .Values.image.containerPort }}
-  selector:
-    app: {{ .Chart.Name }}
