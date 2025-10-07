@@ -5,6 +5,6 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 8080
+  - port: {{ .Values.image.containerPort }}
   selector:
     app: {{ .Values.image.containerName }}
