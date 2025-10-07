@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-deployment
+  name: {{ .Values.image.containerName }}-deployment
 spec:
   strategy:
     type: RollingUpdate
@@ -13,14 +13,14 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: {{ .Values.image.containerName }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: {{ .Values.image.containerName }}
     spec:
       containers:
-      - name: {{ .Chart.Name }}-container
+      - name: {{ .Values.image.containerName }}-container
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag  }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
