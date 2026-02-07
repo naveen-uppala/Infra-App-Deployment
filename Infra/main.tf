@@ -46,6 +46,16 @@ locals {
 
 }
 
+module "vpc_endpoints" {
+  source = "./modules/tf-vpc-endpoints"
+  vpc_id                   = module.vpc.vpc_id
+  private_route_table_ids  = values(module.vpc.private_route_table_id)
+  private_subnet_ids       = values(module.vpc.private_subnet_ids)
+  region                   = var.region
+  vpc_cidr_blocks          = module.vpc.vpc_cidr_blocks
+}
+
+
 module "tf-alb" {
   source             = "./modules/tf-alb"
   vpc_id             = module.tf-vpc.vpc_id
