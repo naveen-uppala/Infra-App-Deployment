@@ -52,7 +52,7 @@ module "vpc_endpoints" {
   private_route_table_ids  = values(module.vpc.private_route_table_id)
   private_subnet_ids       = values(module.vpc.private_subnet_ids)
   region                   = var.region
-  vpc_cidr_blocks          = module.vpc.vpc_cidr_blocks
+  vpc_cidr                 = var.vpc_cidr
 }
 
 
