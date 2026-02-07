@@ -22,7 +22,7 @@ terraform {
 provider "aws" {
   region = var.region
 }
-module "tf-vpc" {
+module "tf_vpc" {
   source   = "./modules/tf-vpc"
   vpc_name = var.vpc_name
   vpc_cidr = var.vpc_cidr
@@ -54,19 +54,19 @@ locals {
 
 }
 
-module "vpc-endpoints" {
+module "vpc_endpoints" {
   source = "./modules/tf-vpc-endpoints"
-  vpc_id                   = module.tf-vpc.vpc_id
-  private_route_table_id  = values(module.tf-vpc.private_route_table_id)
-  private_subnet_ids       = values(module.tf-vpc.private_subnet_ids)
+  vpc_id                   = module.tf_vpc.vpc_id
+  private_route_table_id  = values(module.tf_vpc.private_route_table_id)
+  private_subnet_ids       = values(module.tf_vpc.private_subnet_ids)
   region                   = var.region
   vpc_cidr                 = var.vpc_cidr
 }
 
 
-module "tf-alb" {
+module "tf_alb" {
   source             = "./modules/tf-alb"
-  vpc_id             = module.tf-vpc.vpc_id
+  vpc_id             = module.tf_vpc.vpc_id
   public_subnet_ids  = local.public_subnet_ids
   alb_name           = "frontend-alb"
   acm_certificate_arn = var.acm_certificate_arn  
@@ -74,7 +74,7 @@ module "tf-alb" {
 }
 
 
-module "tf-ecr" {
+module "tf_ecr" {
   source           = "./modules/tf-ecr"
   repository_names = var.ecr_repository_names
   tags             = var.tags
@@ -83,42 +83,42 @@ module "tf-ecr" {
 
 
 
-module "tf-ecs" {
+module "tf_ecs" {
   source                    = "./modules/tf-ecs"
   cluster_name              = var.ecs_cluster_name
-  alb_security_group_id     = module.tf-alb.alb_sg_id
-  vpc_id                    = module.tf-vpc.vpc_id
+  alb_security_group_id     = module.tf_alb.alb_sg_id
+  vpc_id                    = module.tf_vpc.vpc_id
   subnet_ids                = local.web_tier_subnet_ids
   enable_container_insights = true
   use_fargate_providers     = true
   tags                      = var.tags
 }
 
-module "backend-alb-sg" {
+module "backend_alb_sg" {
   source                = "./modules/tf-backend-alb-sg"
-  vpc_id               = module.tf-vpc.vpc_id
-  ecs_security_group_id = module.tf-ecs.ecs_service_sg_id
+  vpc_id               = module.tf_vpc.vpc_id
+  ecs_security_group_id = module.tf_ecs.ecs_service_sg_id
   tags                 = var.tags
 }
 
 
-module "tf-eks" {
+module "tf_eks" {
   source       = "./modules/tf-eks"
   eks_cluster_name = var.eks_cluster_name
   eks_version  = var.eks_version
-  vpc_id       = module.tf-vpc.vpc_id
+  vpc_id       = module.tf_vpc.vpc_id
   subnet_ids   = local.app_tier_subnet_ids
-  backend_alb_sg_id     = module.backend-alb-sg.backend_alb_sg_id 
+  backend_alb_sg_id     = module.backend_alb_sg.backend_alb_sg_id 
   tags               = var.tags  
-  depends_on = [module.vpc-endpoints]
+  depends_on = [module.vpc_endpoints]
 
 }
 
 
-module "tf-rds" {
+module "tf_rds" {
   source          = "./modules/tf-rds"
-  vpc_id          = module.tf-vpc.vpc_id
-  eks_nodes_sg_id  = module.tf-eks.tf_eks_cluster_security_group_id
+  vpc_id          = module.tf_vpc.vpc_id
+  eks_nodes_sg_id  = module.tf_eks.tf_eks_cluster_security_group_id
   data_subnet_ids = local.data_tier_subnet_ids
   db_username     = var.db_username
   db_password     = var.db_password
