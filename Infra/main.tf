@@ -1,5 +1,14 @@
 // Infra/main.tf
 terraform {
+
+  backend "s3" {
+    bucket         = "my-terraform-state-b25"
+    key            = "envs/dev/terraform.tfstate"
+    region         = "us-east-2"
+    dynamodb_table = "terraform-locks"
+    encrypt        = true
+  }
+
   required_version = ">= 1.5.0"
   required_providers {
     aws        = { source = "hashicorp/aws",       version = ">= 5.0" }
@@ -13,7 +22,6 @@ terraform {
 provider "aws" {
   region = var.region
 }
-
 module "tf-vpc" {
   source   = "./modules/tf-vpc"
   vpc_name = var.vpc_name
