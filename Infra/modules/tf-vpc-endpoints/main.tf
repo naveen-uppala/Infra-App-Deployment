@@ -9,7 +9,7 @@ resource "aws_security_group" "vpc_endpoints" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = var.vpc_cidr_blocks
+    cidr_blocks = var.vpc_cidr
   }
 
   egress {
@@ -58,7 +58,7 @@ resource "aws_vpc_endpoint" "s3" {
   service_name      = "com.amazonaws.${var.region}.s3"
   vpc_endpoint_type = "Gateway"
 
-  route_table_ids = var.private_route_table_ids
+  route_table_ids = var.private_route_table_id
 
   tags = {
     Name = "vpce-s3"
