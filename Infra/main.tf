@@ -54,7 +54,7 @@ locals {
 
 }
 
-module "vpc_endpoints" {
+module "vpc-endpoints" {
   source = "./modules/tf-vpc-endpoints"
   vpc_id                   = module.tf-vpc.vpc_id
   private_route_table_id  = values(module.tf-vpc.private_route_table_id)
@@ -110,6 +110,8 @@ module "tf-eks" {
   subnet_ids   = local.app_tier_subnet_ids
   backend_alb_sg_id     = module.backend-alb-sg.backend_alb_sg_id 
   tags               = var.tags  
+  depends_on = [module.vpc-endpoints]
+
 }
 
 
