@@ -32,24 +32,24 @@ module "tf_vpc" {
 # Pick the web/app-tier subnets from VPC outputs
 locals {
   public_subnet_ids  = [
-    module.tf-vpc.public_subnet_ids["Public-Subnet-1"],
-    module.tf-vpc.public_subnet_ids["Public-Subnet-2"],
-    module.tf-vpc.public_subnet_ids["Public-Subnet-3"],
+    module.tf_vpc.public_subnet_ids["Public-Subnet-1"],
+    module.tf_vpc.public_subnet_ids["Public-Subnet-2"],
+    module.tf_vpc.public_subnet_ids["Public-Subnet-3"],
   ]
   web_tier_subnet_ids = [
-    module.tf-vpc.private_subnet_ids["web-tier-subnet-1"],
-    module.tf-vpc.private_subnet_ids["web-tier-subnet-2"],
-    module.tf-vpc.private_subnet_ids["web-tier-subnet-3"],
+    module.tf_vpc.private_subnet_ids["web-tier-subnet-1"],
+    module.tf_vpc.private_subnet_ids["web-tier-subnet-2"],
+    module.tf_vpc.private_subnet_ids["web-tier-subnet-3"],
   ]
   app_tier_subnet_ids = [
-    module.tf-vpc.private_subnet_ids["app-tier-subnet-1"],
-    module.tf-vpc.private_subnet_ids["app-tier-subnet-2"],
-    module.tf-vpc.private_subnet_ids["app-tier-subnet-3"],
+    module.tf_vpc.private_subnet_ids["app-tier-subnet-1"],
+    module.tf_vpc.private_subnet_ids["app-tier-subnet-2"],
+    module.tf_vpc.private_subnet_ids["app-tier-subnet-3"],
   ]
   data_tier_subnet_ids = [
-    module.tf-vpc.private_subnet_ids["data-tier-subnet-1"],
-    module.tf-vpc.private_subnet_ids["data-tier-subnet-2"],
-    module.tf-vpc.private_subnet_ids["data-tier-subnet-3"],
+    module.tf_vpc.private_subnet_ids["data-tier-subnet-1"],
+    module.tf_vpc.private_subnet_ids["data-tier-subnet-2"],
+    module.tf_vpc.private_subnet_ids["data-tier-subnet-3"],
   ]
 
 }
