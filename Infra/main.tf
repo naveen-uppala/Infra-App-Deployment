@@ -4,7 +4,7 @@ terraform {
   backend "s3" {
     bucket         = "my-terraform-state-b25"
     key            = "envs/dev/terraform.tfstate"
-    region         = "us-east-2"
+    region         =  var.region
     dynamodb_table = "terraform-locks"
     encrypt        = true
   }
@@ -101,8 +101,6 @@ module "tf_eks" {
   subnet_ids   = local.app_tier_subnet_ids
   backend_alb_sg_id     = module.backend_alb_sg.backend_alb_sg_id 
   tags               = var.tags  
-  depends_on = [module.vpc_endpoints]
-
 }
 
 
