@@ -1,0 +1,37 @@
+################# Install Required Dependencies #################
+
+sudo yum update -y
+sudo yum install -y libicu openssl-libs krb5-libs zlib libgcc libstdc++ curl tar
+
+#################Download######################################
+
+# Create a folder
+i) mkdir actions-runner && cd actions-runner
+
+# Download the latest runner package
+ii) curl -o actions-runner-linux-x64-2.333.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.333.0/actions-runner-linux-x64-2.333.0.tar.gz
+
+# Extract the installer
+iii) tar xzf ./actions-runner-linux-x64-2.333.0.tar.gz
+
+#################Configure######################################
+
+# Create the runner and start the configuration experience
+
+i) ./config.sh \
+    --url https://github.com/github_username/github_reponame \
+    --token YOUR_NEW_TOKEN \
+    --name ec2-runner \
+    --labels ec2,linux \
+    --work _work \
+    --unattended \
+    --replace
+
+# Install as a Service
+i) sudo ./svc.sh install
+ii) sudo ./svc.sh start
+
+#################Using your self-hosted runner###################
+
+# Use this YAML in your workflow file for each job
+runs-on: self-hosted
