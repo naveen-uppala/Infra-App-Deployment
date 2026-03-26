@@ -1,0 +1,91 @@
+name: customer CD Pipeline
+on:
+  workflow_run:
+    workflows: ["customer CI Pipeline"]
+    types:
+      - completed
+
+jobs:
+  DEPLOY:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Update kubeconfig for EKS
+        run: |
+          aws eks update-kubeconfig \
+            --region ${{ vars.AWS_REGION }} \
+            --name ${{ vars.EKS_CLUSTER_NAME }}
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'latest'
+
+      - name: Deploy to EKS via Helm
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ github.event.workflow_run.head_repository.name }}
+          IMAGE_TAG: ${{ github.event.workflow_run.run_number }}
+        run: |
+          helm upgrade --install ${{ vars.HELM_RELEASE_NAME }} ./helm/${{ vars.HELM_CHART_NAME }} \
+            --namespace ${{ vars.K8S_NAMESPACE }} \
+            --create-namespace \
+            --set image.repository=$ECR_REGISTRY/$ECR_REPOSITORY \
+            --set image.tag=$IMAGE_TAG \
+            --set image.pullPolicy=Always \
+            --values ./helm/${{ vars.HELM_CHART_NAME }}/values.yaml \
+            --wait \
+            --timeout 5m0s
+
+      - name: Verify Deployment
+        run: |
+          kubectl rollout status deployment/${{ vars.HELM_RELEASE_NAME }} \
+            --namespace ${{ vars.K8S_NAMESPACE }} \
+            --timeout=3m
+```
+
+---
+
+### Required GitHub Variables & Secrets
+
+Add these under your repo's **Settings → Secrets and Variables**:
+
+| Type | Name | Example Value |
+|---|---|---|
+| Secret | `AWS_ACCESS_KEY_ID` | `AKIA...` |
+| Secret | `AWS_SECRET_ACCESS_KEY` | `wJalr...` |
+| Variable | `AWS_REGION` | `ap-south-1` |
+| Variable | `EKS_CLUSTER_NAME` | `my-eks-cluster` |
+| Variable | `HELM_RELEASE_NAME` | `customer-app` |
+| Variable | `HELM_CHART_NAME` | `customer-chart` |
+| Variable | `K8S_NAMESPACE` | `production` |
+
+---
+
+### Expected Helm Chart Structure
+
+Your repository should have this layout for the `--values` and `--set` flags to work:
+```
+helm/
+└── customer-chart/
+    ├── Chart.yaml
+    ├── values.yaml          # image.repository & image.tag defined here
+    └── templates/
+        ├── deployment.yaml
+        ├── service.yaml
+        └── ingress.yaml     # optional
