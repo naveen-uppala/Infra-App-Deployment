@@ -14,8 +14,8 @@ jobs:
       - name: Checkout Helm charts repo
         uses: actions/checkout@v4
         with:
-          repository: naveen-uppala/common-helm-charts
-          path: helm-charts
+          repository: naveen-uppala/Infra-App-Deployment
+          path: App/helm-charts
           token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Configure AWS Credentials
@@ -40,11 +40,35 @@ jobs:
         with:
           version: 'latest'
 
+    - name: Resolve image tag
+      id: resolve_image_tag
+      run: |
+        RUN_NUMBER=$(curl -s \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github+json" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/workflows/Frontend_CI.yml/runs?status=success&per_page=1" \
+          | jq -r '.workflow_runs[0].run_number')
+    
+        if [ "$RUN_NUMBER" = "null" ] || [ -z "$RUN_NUMBER" ]; then
+          echo "No successful build found"
+          exit 1
+        fi
+    
+        if [ -n "${{ inputs.image_tag }}" ]; then
+          TAG="${{ inputs.image_tag }}"
+          echo "Using input tag: $TAG"
+        else
+          TAG="$RUN_NUMBER"
+          echo "Using last successful build tag: $TAG"
+        fi
+        echo "image_tag=$TAG" >> $GITHUB_OUTPUT    
+          
+
       - name: Deploy to EKS via Helm
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ github.event.workflow_run.head_repository.name }}
-          IMAGE_TAG: ${{ github.event.workflow_run.run_number }}
+          IMAGE_TAG: ${{ steps.resolve_image_tag.outputs.image_tag }}
         run: |
           helm upgrade --install ${{ vars.HELM_RELEASE_NAME }} ./helm/${{ vars.HELM_CHART_NAME }} \
             --namespace ${{ vars.K8S_NAMESPACE }} \
@@ -75,21 +99,9 @@ Add these under your repo's **Settings → Secrets and Variables**:
 | Secret | `AWS_SECRET_ACCESS_KEY` | `wJalr...` |
 | Variable | `AWS_REGION` | `ap-south-1` |
 | Variable | `EKS_CLUSTER_NAME` | `my-eks-cluster` |
-| Variable | `HELM_RELEASE_NAME` | `customer-app` |
-| Variable | `HELM_CHART_NAME` | `customer-chart` |
-| Variable | `K8S_NAMESPACE` | `production` |
+| Variable | `HELM_RELEASE_NAME` | `customer-release` |
+| Variable | `HELM_CHART_NAME` | `customer` |
+| Variable | `K8S_NAMESPACE` | `default` |
 
 ---
 
-### Expected Helm Chart Structure
-
-Your repository should have this layout for the `--values` and `--set` flags to work:
-```
-helm/
-└── customer-chart/
-    ├── Chart.yaml
-    ├── values.yaml          # image.repository & image.tag defined here
-    └── templates/
-        ├── deployment.yaml
-        ├── service.yaml
-        └── ingress.yaml     # optional
