@@ -4,14 +4,14 @@
 
 
 
-replicaCount: <+pipeline.stages.Deploy.variables.replicas>
+replicaCount: 1
 
 image:
-  repository: <+artifact.image>
+  repository: ""
+  tag: ""
   pullPolicy: Always
-  containerPort: <+pipeline.variables.containerPort>
-  containerName: <+pipeline.variables.AppName>
-  # Overrides the image tag whose default is the chart appVersion.
+  containerPort: 8080
+  containerName: customer
 
 ingress:
   enabled: false
