@@ -8,7 +8,7 @@ replicaCount: 1
 
 image:
   repository: ""
-  tag: 21
+  tag: ""
   pullPolicy: Always
   containerPort: 8080
   containerName: customer
