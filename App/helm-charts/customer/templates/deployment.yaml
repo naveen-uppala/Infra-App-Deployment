@@ -9,7 +9,6 @@ spec:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
-  revisionHistoryLimit: 4  
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
