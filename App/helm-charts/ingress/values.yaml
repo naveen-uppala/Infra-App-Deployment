@@ -4,12 +4,12 @@
 
 
 ingress:
-  certificateArn: "<+serviceVariables.certificateArn>"
-  securitygroup: "<+serviceVariables.ingress_securitygroup>"
+  certificateArn: ""
+  securitygroup: ""
   subnets:
-    subnetA: "<+serviceVariables.subnetA>"
-    subnetB: "<+serviceVariables.subnetB>"
-    subnetC: "<+serviceVariables.subnetC>"
+    subnetA: ""
+    subnetB: ""
+    subnetC: ""
 
 
 routes:
