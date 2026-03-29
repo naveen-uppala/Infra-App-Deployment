@@ -1,0 +1,31 @@
+# Annotations Reference:  https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/ingress/annotation/
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-hpm
+  labels:
+    app: packersmovers
+  annotations:
+    # Ingress Core Settings
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/subnets: {{ .Values.ingress.subnets.subnetA }},{{ .Values.ingress.subnets.subnetB }},{{ .Values.ingress.subnets.subnetC }}  
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.certificateArn }}
+    alb.ingress.kubernetes.io/security-groups: {{ .Values.ingress.securitygroup }}
+
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          {{- range .Values.routes }}
+          - path: {{ .path }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .serviceName }}
+                port:
+                  number: {{ .servicePort }}
+          {{- end }}
