@@ -8,7 +8,7 @@ image:
   repository: ""
   tag: ""
   pullPolicy: Always
-  containerPort: 8080
+  containerPort: 5000
   containerName: frontend
 
 ingress:
