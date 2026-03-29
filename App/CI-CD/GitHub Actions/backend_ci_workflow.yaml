@@ -32,7 +32,7 @@ jobs:
         uses: github/codeql-action/analyze@v4
         
   BUILD:
-    environment: dev 
+    environment: dev
     runs-on: ubuntu-latest
     steps:
     - name: Clone Repository
