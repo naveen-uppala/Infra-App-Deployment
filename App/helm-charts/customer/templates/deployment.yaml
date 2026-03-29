@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.image.containerName }}-deployment
+  name: {{ .Values.image.containerName }}-release
 spec:
   strategy:
     type: RollingUpdate
