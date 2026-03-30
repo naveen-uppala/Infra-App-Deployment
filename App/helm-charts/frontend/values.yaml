@@ -11,6 +11,12 @@ image:
   containerPort: 5000
   containerName: frontend
 
+readinessProbe:
+  httpGet:
+    path: /
+    port: 5000
+
+
 ingress:
   enabled: false
 
