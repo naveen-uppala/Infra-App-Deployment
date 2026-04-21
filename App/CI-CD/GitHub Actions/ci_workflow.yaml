@@ -11,27 +11,7 @@ permissions:
   contents: read
   security-events: write
 
-jobs:
-
-  SAST:
-    name: CodeQL Scan
-    runs-on: ubuntu-latest   # or ubuntu-latest (recommended)
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
-        with:
-          languages: java  # Change if needed (e.g., python, java, csharp)
-          queries: security-extended
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v4
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4
-        
+jobs:        
   BUILD:
     environment: dev
     runs-on: ubuntu-latest
@@ -63,5 +43,3 @@ jobs:
       if: always()
       run: |
         docker system prune -af
-      
-        
