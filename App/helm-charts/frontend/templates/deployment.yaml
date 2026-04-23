@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.image.containerName }}-release
+  namespace: {{ .Values.k8s.namespace }}
 spec:
   strategy:
     type: RollingUpdate
