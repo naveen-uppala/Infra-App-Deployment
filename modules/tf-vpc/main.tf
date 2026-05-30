@@ -13,22 +13,19 @@ locals {
   ]
 
   private_subnets = [
-    { name = "web-tier-subnet-1",  index = 3, az = local.azs[0] },
-    { name = "web-tier-subnet-2",  index = 4, az = local.azs[1] },
-    { name = "web-tier-subnet-3",  index = 5, az = local.azs[2] },
-    { name = "app-tier-subnet-1",  index = 6, az = local.azs[0] },
-    { name = "app-tier-subnet-2",  index = 7, az = local.azs[1] },
-    { name = "app-tier-subnet-3",  index = 8, az = local.azs[2] },
-    { name = "data-tier-subnet-1", index = 9, az = local.azs[0] },
+    { name = "web-tier-subnet-1",  index = 3,  az = local.azs[0] },
+    { name = "web-tier-subnet-2",  index = 4,  az = local.azs[1] },
+    { name = "web-tier-subnet-3",  index = 5,  az = local.azs[2] },
+    { name = "app-tier-subnet-1",  index = 6,  az = local.azs[0] },
+    { name = "app-tier-subnet-2",  index = 7,  az = local.azs[1] },
+    { name = "app-tier-subnet-3",  index = 8,  az = local.azs[2] },
+    { name = "data-tier-subnet-1", index = 9,  az = local.azs[0] },
     { name = "data-tier-subnet-2", index = 10, az = local.azs[1] },
     { name = "data-tier-subnet-3", index = 11, az = local.azs[2] },
   ]
 
   public_subnets_by_name  = { for s in local.public_subnets : s.name => s }
   private_subnets_by_name = { for s in local.private_subnets : s.name => s }
-
-  # Map AZ to public subnet name to help routing later
-  public_subnet_by_az = { for s in local.public_subnets : s.az => s.name }
 
   common_tags = merge({ "Project" = "Cloud Nation" }, var.tags)
 }
@@ -41,7 +38,7 @@ resource "aws_vpc" "this" {
   tags                 = merge(local.common_tags, { "Name" = var.vpc_name })
 }
 
-# ---------- Default Secuirty Group ----------
+# ---------- Default Security Group ----------
 resource "aws_default_security_group" "default" {
   vpc_id = aws_vpc.this.id
   ingress {
@@ -50,7 +47,6 @@ resource "aws_default_security_group" "default" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -58,7 +54,7 @@ resource "aws_default_security_group" "default" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name        = "default-sg"
+    Name = "default-sg"
   }
 }
 
@@ -83,17 +79,16 @@ resource "aws_subnet" "public" {
   })
 }
 
-# ---------- NAT GATEWAYS ----------
-# Create one EIP per public subnet
-
 /*
+# ---------- NAT GATEWAYS ----------
+# Re-enable if workloads need public internet access (Docker Hub, external APIs etc.)
+
 resource "aws_eip" "nat" {
   for_each = aws_subnet.public
   domain   = "vpc"
   tags     = merge(local.common_tags, { "Name" = "Natgateway EIP-${each.key}" })
 }
 
-# Create one NAT GW per public subnet
 resource "aws_nat_gateway" "nat" {
   for_each      = aws_subnet.public
   allocation_id = aws_eip.nat[each.key].id
@@ -103,7 +98,7 @@ resource "aws_nat_gateway" "nat" {
 }
 */
 
-# ---------- PUBLIC ROUTES ----------
+# ---------- PUBLIC ROUTE TABLE ----------
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
   tags   = merge(local.common_tags, { "Name" = "public route table" })
@@ -115,9 +110,8 @@ resource "aws_route" "public_default" {
   gateway_id             = aws_internet_gateway.igw.id
 }
 
-# Associate ALL public subnets with public route table
 resource "aws_route_table_association" "public_assoc" {
-  for_each      = aws_subnet.public
+  for_each       = aws_subnet.public
   subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
@@ -136,34 +130,31 @@ resource "aws_subnet" "private" {
   })
 }
 
-# ---------- PRIVATE ROUTE TABLES ----------
-# One route table per private subnet (best practice for per-AZ NAT)
+# ---------- PRIVATE ROUTE TABLE ----------
+# Single shared route table for all private subnets
+# No NAT routes needed — traffic stays within VPC via VPC Endpoints
 resource "aws_route_table" "private" {
-  for_each = aws_subnet.private
-
   vpc_id = aws_vpc.this.id
-  tags   = merge(local.common_tags, { "Name" = "private route table - ${each.key}" })
+  tags   = merge(local.common_tags, { "Name" = "private route table" })
+}
+
+resource "aws_route_table_association" "private_assoc" {
+  for_each       = aws_subnet.private
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.private.id
 }
 
 /*
-# Add a default route per private subnet -> NAT in same AZ
+# ---------- PRIVATE DEFAULT ROUTE ----------
+# Re-enable together with NAT Gateway block above if needed
+
 resource "aws_route" "private_default" {
   for_each = aws_subnet.private
 
   route_table_id         = aws_route_table.private[each.key].id
   destination_cidr_block = "0.0.0.0/0"
-
-  # Pick NAT GW in the same AZ
-  nat_gateway_id = aws_nat_gateway.nat[
+  nat_gateway_id         = aws_nat_gateway.nat[
     local.public_subnet_by_az[each.value.availability_zone]
   ].id
-
 }
 */
-
-# Associate each private subnet with its route table
-resource "aws_route_table_association" "private_assoc" {
-  for_each      = aws_subnet.private
-  subnet_id      = each.value.id
-  route_table_id = aws_route_table.private[each.key].id
-}
