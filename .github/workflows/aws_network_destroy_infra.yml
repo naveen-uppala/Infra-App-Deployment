@@ -1,4 +1,4 @@
-name: "Destroy Network Infra"
+name: "Destroy AWS Network Infra"
 
 on:
   workflow_dispatch:
