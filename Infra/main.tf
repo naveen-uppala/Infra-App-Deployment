@@ -22,12 +22,7 @@ terraform {
 provider "aws" {
   region = var.region
 }
-module "tf_vpc" {
-  source   = "./modules/tf-vpc"
-  vpc_name = var.vpc_name
-  vpc_cidr = var.vpc_cidr
-  tags     = var.tags
-}
+
 
 # Pick the web/app-tier subnets from VPC outputs
 locals {
@@ -56,7 +51,7 @@ locals {
 
 
 module "tf_alb" {
-  source             = "./modules/tf-alb"
+  source             = "../modules/tf-alb"
   vpc_id             = module.tf_vpc.vpc_id
   public_subnet_ids  = local.public_subnet_ids
   alb_name           = "frontend-alb"
@@ -66,7 +61,7 @@ module "tf_alb" {
 
 
 module "tf_ecr" {
-  source           = "./modules/tf-ecr"
+  source           = "../modules/tf-ecr"
   repository_names = var.ecr_repository_names
   tags             = var.tags
 }
@@ -75,7 +70,7 @@ module "tf_ecr" {
 
 
 module "tf_ecs" {
-  source                    = "./modules/tf-ecs"
+  source                    = "../modules/tf-ecs"
   cluster_name              = var.ecs_cluster_name
   alb_security_group_id     = module.tf_alb.alb_sg_id
   vpc_id                    = module.tf_vpc.vpc_id
@@ -86,7 +81,7 @@ module "tf_ecs" {
 }
 
 module "backend_alb_sg" {
-  source                = "./modules/tf-backend-alb-sg"
+  source                = "../modules/tf-backend-alb-sg"
   vpc_id               = module.tf_vpc.vpc_id
   ecs_security_group_id = module.tf_ecs.ecs_service_sg_id
   tags                 = var.tags
@@ -94,7 +89,7 @@ module "backend_alb_sg" {
 
 
 module "tf_eks" {
-  source       = "./modules/tf-eks"
+  source       = "../modules/tf-eks"
   eks_cluster_name = var.eks_cluster_name
   eks_version  = var.eks_version
   vpc_id       = module.tf_vpc.vpc_id
@@ -105,7 +100,7 @@ module "tf_eks" {
 
 
 module "tf_rds" {
-  source          = "./modules/tf-rds"
+  source          = "../modules/tf-rds"
   vpc_id          = module.tf_vpc.vpc_id
   eks_nodes_sg_id  = module.tf_eks.tf_eks_cluster_security_group_id
   data_subnet_ids = local.data_tier_subnet_ids
