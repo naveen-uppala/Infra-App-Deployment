@@ -1,3 +1,5 @@
+/*
+
 ###############################################
 # IAM Role for EKS Control Plane
 ###############################################
@@ -134,3 +136,4 @@ resource "aws_eks_node_group" "tf_eks_ng" {
     aws_iam_role_policy_attachment.tf_eks_node_cni
   ]
 }
+*/
