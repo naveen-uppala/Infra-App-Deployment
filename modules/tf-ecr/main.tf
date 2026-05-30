@@ -8,6 +8,7 @@ locals {
 resource "aws_ecr_repository" "this" {
   for_each             = local.repos
   name                 = each.value
+  force_delete = true 
   tags = merge(local.common_tags, { Name = each.value })
 }
 
