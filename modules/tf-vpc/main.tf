@@ -85,6 +85,8 @@ resource "aws_subnet" "public" {
 
 # ---------- NAT GATEWAYS ----------
 # Create one EIP per public subnet
+
+/*
 resource "aws_eip" "nat" {
   for_each = aws_subnet.public
   domain   = "vpc"
@@ -99,6 +101,7 @@ resource "aws_nat_gateway" "nat" {
   tags          = merge(local.common_tags, { "Name" = "Natgateway-${each.key}" })
   depends_on    = [aws_internet_gateway.igw]
 }
+*/
 
 # ---------- PUBLIC ROUTES ----------
 resource "aws_route_table" "public" {
@@ -142,6 +145,7 @@ resource "aws_route_table" "private" {
   tags   = merge(local.common_tags, { "Name" = "private route table - ${each.key}" })
 }
 
+/*
 # Add a default route per private subnet -> NAT in same AZ
 resource "aws_route" "private_default" {
   for_each = aws_subnet.private
@@ -153,7 +157,9 @@ resource "aws_route" "private_default" {
   nat_gateway_id = aws_nat_gateway.nat[
     local.public_subnet_by_az[each.value.availability_zone]
   ].id
+
 }
+*/
 
 # Associate each private subnet with its route table
 resource "aws_route_table_association" "private_assoc" {
