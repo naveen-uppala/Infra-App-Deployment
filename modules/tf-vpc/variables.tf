@@ -9,10 +9,10 @@ variable "vpc_cidr" {
   type        = string
 }
 
-/*
+
 variable "tags" {
   description = "Extra tags applied to all resources."
   type        = map(string)
   default     = {}
 }
-*/
+
