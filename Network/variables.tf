@@ -32,10 +32,10 @@ variable "vpc_id" {
   default     = null
 }
 
-/*
+
 variable "tags" {
   description = "Optional additional tags to apply to all resources."
   type        = map(string)
   default     = {}
 }
-*/
+
