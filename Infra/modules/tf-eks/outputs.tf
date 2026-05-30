@@ -12,9 +12,14 @@ output "tf_eks_cluster_security_group_id" {
   value       = aws_eks_cluster.tf_eks_cluster.vpc_config[0].cluster_security_group_id
 }
 
+# Required for EKS Cluster Custom Config Setup
+
+/*
 output "tf_eks_node_group_name" {
   value = aws_eks_node_group.tf_eks_ng.node_group_name
 }
+*/
+
 # Used by root providers
 output "tf_eks_cluster_endpoint" {
   value = aws_eks_cluster.tf_eks_cluster.endpoint
