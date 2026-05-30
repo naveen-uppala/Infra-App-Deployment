@@ -16,8 +16,8 @@ env:
   TF_WORKING_DIR: Network
   AWS_REGION: us-east-2
   TF_VAR_region: us-east-2
-  TF_VAR_vpc_cidr: ${{ secrets.TF_VAR_vpc_cidr }}
-  TF_VAR_vpc_name: ${{ secrets.TF_VAR_vpc_name }}
+  TF_VAR_vpc_cidr: ${{ vars.TF_VAR_vpc_cidr }}
+  TF_VAR_vpc_name: ${{ vars.TF_VAR_vpc_name }}
 
 jobs:
   terraform:
