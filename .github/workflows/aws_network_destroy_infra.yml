@@ -1,0 +1,54 @@
+name: "Destroy Network Infra"
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Specific resource to destroy (optional). Example: module.tf_vpc.aws_nat_gateway.nat"
+        required: false
+        default: ""
+
+env:
+  TF_WORKING_DIR: Network
+  AWS_REGION: us-east-2
+  TF_VAR_region: us-east-2
+  TF_VAR_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+  TF_VAR_vpc_cidr: ${{ vars.TF_VAR_vpc_cidr }}
+  TF_VAR_vpc_name: ${{ vars.TF_VAR_vpc_name }}
+
+jobs:
+  terraform-destroy:
+    name: "Network Destroy"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.5
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init
+
+      # Destroy specific resource if target is provided
+      - name: Terraform Destroy (targeted)
+        if: github.event.inputs.target != ''
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform destroy -target="${{ github.event.inputs.target }}" -auto-approve
+
+      # Destroy everything if no target is provided
+      - name: Terraform Destroy (full)
+        if: github.event.inputs.target == ''
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform destroy -auto-approve
