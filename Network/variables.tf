@@ -12,11 +12,13 @@ variable "vpc_cidr" {
   type        = string
 }
 
+/*
 # Passing a value through Harness workspace varibales
 variable "account_id" {
   description = "AWS Account ID"
   type        = string
 }
+*/
 
 variable "vpc_name" {
   description = "Name tag for the VPC."
