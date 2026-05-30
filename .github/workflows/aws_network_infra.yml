@@ -1,4 +1,4 @@
-name: "Terraform Network"
+name: "Provision AWS Network Infra"
 
 on:
   workflow_dispatch:
