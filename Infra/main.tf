@@ -27,7 +27,7 @@ provider "aws" {
 data "terraform_remote_state" "network" {
   backend = "s3"
   config = {
-    bucket = "my-terraform-state-b26"
+    bucket = "terraform-state-b26-workshop"
     key    = "envs/dev/network.tfstate"
     region = "us-east-2"
   }
