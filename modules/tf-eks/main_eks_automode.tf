@@ -47,15 +47,16 @@ resource "aws_eks_cluster" "tf_eks_cluster" {
   name     = var.eks_cluster_name
   role_arn = aws_iam_role.tf_eks_cluster.arn
   version  = var.eks_version
+  bootstrap_self_managed_addons = false
 
   vpc_config {
     subnet_ids              = var.subnet_ids
-    endpoint_private_access = false
-    endpoint_public_access  = true
+    endpoint_private_access = true
+    endpoint_public_access  = false
   }
 
   access_config {
-    authentication_mode = "API_AND_CONFIG_MAP"
+    authentication_mode = "API"
   }
 
   # Enable Auto Mode — EKS fully manages node provisioning
