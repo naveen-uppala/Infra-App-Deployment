@@ -7,25 +7,20 @@ output "region" {
 }
 
 output "vpc_id" {
-  value = module.tf_vpc.vpc_id
+  value = data.terraform_remote_state.network.outputs.vpc_id
 }
 
 output "public_subnet_ids" {
-  value = module.tf_vpc.public_subnet_ids
+  value = data.terraform_remote_state.network.outputs.public_subnet_ids
 }
 
 output "private_subnet_ids" {
-  value = module.tf_vpc.private_subnet_ids
+  value = data.terraform_remote_state.network.outputs.web_tier_subnet_ids
 }
 
 output "app_tier_subnet_ids" {
-  value = [
-    module.tf_vpc.private_subnet_ids["app-tier-subnet-1"],
-    module.tf_vpc.private_subnet_ids["app-tier-subnet-2"],
-    module.tf_vpc.private_subnet_ids["app-tier-subnet-3"],
-  ]
+  value = data.terraform_remote_state.network.outputs.app_tier_subnet_ids
 }
-
 
 // ECS Outputs
 
