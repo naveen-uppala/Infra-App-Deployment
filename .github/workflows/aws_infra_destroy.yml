@@ -12,6 +12,8 @@ env:
   TF_WORKING_DIR: Infra
   AWS_REGION: us-east-2
   TF_VAR_region: us-east-2
+  TF_VAR_vpc_cidr: ${{ vars.TF_VAR_vpc_cidr }}
+  TF_VAR_vpc_name: ${{ vars.TF_VAR_vpc_name }}
   TF_VAR_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
   TF_VAR_acm_certificate_arn: ${{ secrets.TF_VAR_acm_certificate_arn }}
   TF_VAR_db_username: ${{ secrets.TF_VAR_db_username }}
