@@ -49,7 +49,7 @@ module "vpc_endpoints" {
   source                 = "../modules/tf-vpc-endpoints"
   vpc_id                 = module.tf_vpc.vpc_id
   private_route_table_id = values(module.tf_vpc.private_route_table_id)
-  private_subnet_ids     = values(module.tf_vpc.private_subnet_ids)
+  private_subnet_ids     = local.app_tier_subnet_ids
   region                 = var.region
   vpc_cidr               = var.vpc_cidr
 }
