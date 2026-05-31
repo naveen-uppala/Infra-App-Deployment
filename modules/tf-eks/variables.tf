@@ -23,7 +23,7 @@ variable "backend_alb_sg_id" {
 variable "eks_version" {
   description = "EKS control plane version"
   type        = string
-  default     = "1.33"
+  default     = "1.35"
 }
 
 variable "tags" {
