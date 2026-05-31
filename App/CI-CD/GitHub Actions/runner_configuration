@@ -6,7 +6,7 @@ sudo yum install -y libicu openssl-libs krb5-libs zlib libgcc libstdc++ tar
 #################Download######################################
 
 # Create a folder
-i) mkdir actions-runner && cd actions-runner
+i) mkdir actions-runner-backend && cd actions-runner-backend
 
 # Download the latest runner package
 ii) curl -o actions-runner-linux-x64-2.333.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.333.0/actions-runner-linux-x64-2.333.0.tar.gz
