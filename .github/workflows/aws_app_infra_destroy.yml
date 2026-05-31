@@ -1,4 +1,4 @@
-name: "Destroy AWS Infra"
+name: "Destroy AWS Application Infra"
 
 on:
   workflow_dispatch:
