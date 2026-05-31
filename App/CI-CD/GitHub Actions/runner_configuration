@@ -1,7 +1,7 @@
 ################# Install Required Dependencies #################
 
 sudo yum update -y
-sudo yum install -y libicu openssl-libs krb5-libs zlib libgcc libstdc++ curl tar
+sudo yum install -y libicu openssl-libs krb5-libs zlib libgcc libstdc++ tar
 
 #################Download######################################
 
