@@ -65,14 +65,8 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform plan -target="${{ github.event.inputs.target }}" -out=tfplan
 
-      # Apply without target
+      # Single apply step — works for both targeted and full
       - name: Terraform Apply
-        if: github.event.inputs.action == 'apply' && github.event.inputs.target == ''
-        working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform apply -auto-approve tfplan
-
-      # Apply with target
-      - name: Terraform Apply (targeted)
-        if: github.event.inputs.action == 'apply' && github.event.inputs.target != ''
+        if: github.event.inputs.action == 'apply'
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform apply -auto-approve tfplan
