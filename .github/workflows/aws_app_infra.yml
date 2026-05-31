@@ -11,6 +11,10 @@ on:
         options:
           - plan
           - apply
+      target:
+        description: "Target module (optional). Example: module.tf_ecr"
+        required: false
+        default: ""
 
 env:
   TF_WORKING_DIR: Infra
@@ -49,12 +53,26 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform init
 
+      # Plan without target
       - name: Terraform Plan
-        if: github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply'
+        if: (github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply') && github.event.inputs.target == ''
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform plan -out=tfplan
 
+      # Plan with target
+      - name: Terraform Plan (targeted)
+        if: (github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply') && github.event.inputs.target != ''
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform plan -target="${{ github.event.inputs.target }}" -out=tfplan
+
+      # Apply without target
       - name: Terraform Apply
-        if: github.event.inputs.action == 'apply'
+        if: github.event.inputs.action == 'apply' && github.event.inputs.target == ''
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform apply -auto-approve tfplan
+
+      # Apply with target
+      - name: Terraform Apply (targeted)
+        if: github.event.inputs.action == 'apply' && github.event.inputs.target != ''
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform apply -auto-approve tfplan
