@@ -1,4 +1,4 @@
-name: "Provision AWS Infra"
+name: "Provision AWS Application Infra"
 
 on:
   workflow_dispatch:
