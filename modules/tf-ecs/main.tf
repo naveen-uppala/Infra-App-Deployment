@@ -34,6 +34,7 @@ resource "aws_ecs_cluster_capacity_providers" "fargate" {
 
 # A security group for ECS services/tasks running in the web-tier subnets
 # (egress-all by default; you can open ingress from an ALB SG later)
+/*
 resource "aws_security_group" "ecs_service" {
   name        = "${var.cluster_name}-svc"
   description = "Security group for ECS services"
@@ -62,7 +63,7 @@ resource "aws_security_group" "ecs_service" {
     Name = "ecs-service-sg"
   })
 }
-
+*/
 # (Optional example) default VPC endpoint interface SG rules could be added here later
 
 # NOTE: We don't create services here, but we output the subnet list and SG so
