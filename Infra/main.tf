@@ -41,37 +41,11 @@ locals {
   data_tier_subnet_ids = data.terraform_remote_state.network.outputs.data_tier_subnet_ids
 }
 
-module "tf_alb" {
-  source              = "../modules/tf-alb"
-  vpc_id              = local.vpc_id
-  public_subnet_ids   = local.public_subnet_ids
-  alb_name            = "frontend-alb"
-  acm_certificate_arn = var.acm_certificate_arn
-  tags                = var.tags
-}
 
 module "tf_ecr" {
   source           = "../modules/tf-ecr"
   repository_names = var.ecr_repository_names
   tags             = var.tags
-}
-
-module "tf_ecs" {
-  source                    = "../modules/tf-ecs"
-  cluster_name              = var.ecs_cluster_name
-  alb_security_group_id     = module.tf_alb.alb_sg_id
-  vpc_id                    = local.vpc_id
-  subnet_ids                = local.web_tier_subnet_ids
-  enable_container_insights = true
-  use_fargate_providers     = true
-  tags                      = var.tags
-}
-
-module "backend_alb_sg" {
-  source                = "../modules/tf-backend-alb-sg"
-  vpc_id                = local.vpc_id
-  ecs_security_group_id = module.tf_ecs.ecs_service_sg_id
-  tags                  = var.tags
 }
 
 module "tf_eks" {
