@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.image.containerName }}-service
   namespace: {{ .Values.k8s.namespace }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.service.type }}
   ports:
   - port: {{ .Values.image.containerPort }}
   selector:
