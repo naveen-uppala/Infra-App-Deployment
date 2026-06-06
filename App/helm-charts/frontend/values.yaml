@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 k8s:
-  namespace: dev
+  namespace: default
 
 replicaCount: 1
 
