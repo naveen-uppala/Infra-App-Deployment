@@ -8,7 +8,7 @@ k8s:
 replicaCount: 1
 
 image:
-  repository: "343218205307.dkr.ecr.us-east-2.amazonaws.com/frontend"
+  repository: ""
   tag: ""
   pullPolicy: Always
   containerPort: 5000
