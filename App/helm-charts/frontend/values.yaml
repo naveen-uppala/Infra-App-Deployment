@@ -3,12 +3,12 @@
 # Declare variables to be passed into your templates.
 
 k8s:
-  namespace: dev
+  namespace: default
 
 replicaCount: 1
 
 image:
-  repository: "623900187958.dkr.ecr.us-east-2.amazonaws.com/frontend"
+  repository: "343218205307.dkr.ecr.us-east-2.amazonaws.com/frontend"
   tag: ""
   pullPolicy: Always
   containerPort: 5000
